@@ -574,3 +574,7 @@ inline void SetDefaultGrayCvImgPixel(IplImage* pImg, int i, int j, UCHAR value)
 
 #endif // CVCORE_H
 
+
+
+
+
