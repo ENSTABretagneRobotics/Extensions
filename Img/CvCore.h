@@ -61,6 +61,7 @@ Version status : Not finished
 #include "opencv/cvwimage.h"
 #include "opencv/cxcore.h"
 #include "opencv/highgui.h"
+#include "opencv2/imgproc/imgproc_c.h"
 // The following headers do not build in C mode.
 #ifdef __cplusplus
 #include "opencv/cvaux.h"
