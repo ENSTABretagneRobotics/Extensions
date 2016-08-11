@@ -1,13 +1,6 @@
-//#include <opencv2/opencv.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-////#include <unistd.h>
-//#include <iostream>
-//#include "Horizon.h"
-//#include "Obstacle.h"
-//#include "ToolsObs.h"
 #include "mainDetectionObstacle.h"
 
-
+using namespace std;
 using namespace cv;
 
 Mat output, srcInitialized, srcCroppedHD,srcObsInit;

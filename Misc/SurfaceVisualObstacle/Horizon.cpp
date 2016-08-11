@@ -1,30 +1,18 @@
-//#include <opencv2/opencv.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-////#include <unistd.h>
-//#include <iostream>
 #include "Horizon.h"
 
-
-
+using namespace std;
 using namespace cv;
-
-
 
 Mat srcCropped, srcErode, srcGray, srcGrayEqualized, srcCanny, srcThresh, srcCroppedHorizon;
 
-
-
-
-
-/* Fonction pour initialiser l'image:
+/* 
+    Fonction pour initialiser l'image:
 
     1. On recadre legerement l'image pour limiter les effets de bords et faire moins de calculs
     2. On fait une erosion pour limiter les effets des vaguelettes
     3. on passe l'image en gris pour n'avoir qu'un canal.
     4. On égalise les gris pour limiter encore les effets des vaguelettes.
-
-
- */
+*/
 cv::Mat initializeImage(cv::Mat src, int boatSize){
 
     srcCropped = src(Rect(0,10, src.cols, src.rows - 10 - boatSize));
@@ -38,25 +26,23 @@ cv::Mat initializeImage(cv::Mat src, int boatSize){
 
     return srcGrayEqualized;
 }
-/* Fonction pour détecter les droites horizontales suceptible d'être celle de l'horizon.
 
-  1. Application de canny pour pour détecter les contours
-  2. Détection des lignes de Hough sur ces contours
-  3. On enlève les lignes clairement non horizontales
-  4. On calcule la moyenne de la hauteur ds lignes restantes
-  5. On enlève celles trop éloignées de la moyenne (a ajuster selon le 3eme paramètre)
+/* 
+    Fonction pour détecter les droites horizontales suceptible d'être celle de l'horizon.
 
-   Paramètres:
+    1. Application de canny pour pour détecter les contours
+    2. Détection des lignes de Hough sur ces contours
+    3. On enlève les lignes clairement non horizontales
+    4. On calcule la moyenne de la hauteur ds lignes restantes
+    5. On enlève celles trop éloignées de la moyenne (a ajuster selon le 3eme paramètre)
+
+    Paramètres:
     - cv::Mat src: l'image source
     - int line_length: la taille minimum des lignes de Hough a détecter
     - int difference: la distance par rapport a la moyenne que chaque lignes doit a avoir au maximum.
 
     Sortie: un vecteur de points contenant les
-
-
- */
-
-
+*/
 vector <Point> cannyHough(cv::Mat src, int line_length, int difference){
 
     /* Application du filtre de Canny pour détecter les contours */
@@ -112,7 +98,8 @@ vector <Point> cannyHough(cv::Mat src, int line_length, int difference){
 }
 
 
-/*Fonction pour ajouter un triangle pour completer l'image decoupee par l'horizon
+/*
+    Fonction pour ajouter un triangle pour completer l'image decoupee par l'horizon
     Paramètre: image source
                les deux poins extremites de l'horizon
                coefficient directeur et ordonnee a l'origine de la droite
@@ -120,12 +107,7 @@ vector <Point> cannyHough(cv::Mat src, int line_length, int difference){
     Sortie L'image completee
 
     /!\ Possibilite de changer la couleur de remplissage dans les Vec3b.
-
 */
-
-
-
-
 cv::Mat fillWithNothing(cv::Mat srcCropped, Point2i point1, Point2i point2, float coef, float ord){
     bool sup;
     if(point1.y == point2.y){
@@ -152,7 +134,9 @@ cv::Mat fillWithNothing(cv::Mat srcCropped, Point2i point1, Point2i point2, floa
     }
     return srcCropped;
 }
-/*  Fonction pour trouver l'horizon sur l'image.
+
+/* 
+    Fonction pour trouver l'horizon sur l'image.
     1. Calcul des points extrimites de la droite
     2. Decoupage de l'image source sur le point le plus haut
     3. Dessin de la droite d'horizon sur l'image
@@ -163,11 +147,7 @@ cv::Mat fillWithNothing(cv::Mat srcCropped, Point2i point1, Point2i point2, floa
         int boatSize: la hauteur visible de l'avant du bateau.
 
         Sortie: l'image decoupee sur l'horizon.
- */
-
-
-
-
+*/
 cv::Mat estimateHorizon(Vec2f houghCoef, cv::Mat src, int boatSize){
 	cv::Mat srcCroppedEst;
     float coef = houghCoef[0];

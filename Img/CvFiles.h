@@ -57,11 +57,11 @@ Return : EXIT_SUCCESS or EXIT_FAILURE if there is an error.
 */
 inline int SaveDefaultColorCvImgToFile(IplImage* pImg, char* filename)
 {
-#if !defined(OPENCV220) && !defined(OPENCV230) && !defined(OPENCV231) && !defined(OPENCV242) && !defined(OPENCV249)
-	if (!cvSaveImage(filename, pImg))
-#else
+#if defined(OPENCV220) || defined(OPENCV231) || defined(OPENCV242) || defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310)
 	if (!cvSaveImage(filename, pImg, 0))
-#endif // !defined(OPENCV220) && !defined(OPENCV230) && !defined(OPENCV231) && !defined(OPENCV242) && !defined(OPENCV249)
+#else
+	if (!cvSaveImage(filename, pImg))
+#endif // defined(OPENCV220) || defined(OPENCV231) || defined(OPENCV242) || defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310)
 	{
 		return EXIT_FAILURE;
 	}
@@ -105,11 +105,11 @@ Return : EXIT_SUCCESS or EXIT_FAILURE if there is an error.
 */
 inline int SaveDefaultGrayCvImgToFile(IplImage* pImg, char* filename)
 {
-#if !defined(OPENCV220) && !defined(OPENCV230) && !defined(OPENCV231) && !defined(OPENCV242) && !defined(OPENCV249)
-	if (!cvSaveImage(filename, pImg))
-#else
+#if defined(OPENCV220) || defined(OPENCV231) || defined(OPENCV242) || defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310)
 	if (!cvSaveImage(filename, pImg, 0))
-#endif // !defined(OPENCV220) && !defined(OPENCV230) && !defined(OPENCV231) && !defined(OPENCV242) && !defined(OPENCV249)
+#else
+	if (!cvSaveImage(filename, pImg))
+#endif // defined(OPENCV220) || defined(OPENCV231) || defined(OPENCV242) || defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310)
 	{
 		return EXIT_FAILURE;
 	}

@@ -19,10 +19,9 @@
 #include <Kinect.h>
 #pragma comment(lib, "Kinect20.lib")
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc_c.h>
-#include <opencv/highgui.h>
-#include <opencv2/contrib/contrib.hpp>
+#include "opencv2/core/core_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "opencv2/highgui/highgui_c.h"
 #endif // INCLUDE_HEADERS_OUTSIDE_CVKINECT2SDKHOOK
 
 #define KINECT_TYPE_COLOR 16

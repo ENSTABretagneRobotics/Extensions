@@ -1,14 +1,11 @@
-//#include <opencv2/opencv.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-////#include <unistd.h>
-//#include <iostream>
 #include "Obstacle.h"
+#include <iostream>
 
-
+using namespace std;
 using namespace cv;
 
-
-/*Fonction pour initialiser l'image.
+/*
+    Fonction pour initialiser l'image.
     1. Séparation des canaux HSV.
     2. application du filtre corespond a la météo choisie
     3. Montre le resultat du filtre si l'option est choisie
@@ -18,12 +15,7 @@ using namespace cv;
                 char weather: 'c' pour cloudy/nuageux 's' pour sunny/ensoleillé.
 
     Sortie; l'image fitlree
-
-
- */
-
-
-
+*/
 cv::Mat obsInit(cv::Mat srcCroppedHD, bool show, char weather){
 
     cv::Mat srcCroppedFilter;
@@ -53,21 +45,19 @@ cv::Mat obsInit(cv::Mat srcCroppedHD, bool show, char weather){
     return srcCroppedFilter;
 }
 
+/*
+    Fonction pour detecter le blob de la mer.
 
-/*Fonction pour detecter le blob de la mer.
+    1. Detection des contours
+    2. Prendre uniquement le plus gros contours
+    3. detection du centre de masse du blob
 
-   1. Detection des contours
-   2. Prendre uniquement le plus gros contours
-   3. detection du centre de masse du blob
-
-   Parametres: cv::Mat srcFiltered image source
-               cv::Mat srcCroppedToDraw image sur laquelle dessiner
+    Parametres: cv::Mat srcFiltered image source
+                cv::Mat srcCroppedToDraw image sur laquelle dessiner
 
     Sortie: un point représentant le centre de masse du blob.
-
-  */
+*/
 Point2f seaContour(cv::Mat srcFiltered, cv::Mat srcCroppedToDraw){
-
 
     vector <vector <cv::Point2i> > listContours;
     vector <cv::Vec4i> HierarchieContours;
@@ -105,16 +95,15 @@ Point2f seaContour(cv::Mat srcFiltered, cv::Mat srcCroppedToDraw){
 }
 
 
-/* Fonction pour detecter l'obstacle
-   Creation des points d'interets: Le centre de masse correspondant au blob de l'eau et le centre de masse de l'image entiere.
+/* 
+    Fonction pour detecter l'obstacle
+    Creation des points d'interets: Le centre de masse correspondant au blob de l'eau et le centre de masse de l'image entiere.
 
-   Parametres: Point2f massCenter Le Centre de masse du blob de l'eau
-               cv::Mat srcCroppedHorizon image source
+    Parametres: Point2f massCenter Le Centre de masse du blob de l'eau
+                cv::Mat srcCroppedHorizon image source
 
-   Sortie: la différence d'abcisse entre les deux centres de masses.
-
- */
-
+    Sortie: la différence d'abcisse entre les deux centres de masses.
+*/
 float obstacleDetected(Point2f massCenter, cv::Mat srcCroppedHorizon){
     /* Si le centre de masse s'eloigne trop du centre du ROI, alors il y a obstacle */
     cv::circle(srcCroppedHorizon, massCenter, 2, CV_RGB(0,255,0), -1, 8);
