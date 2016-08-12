@@ -3,8 +3,6 @@
 using namespace std;
 using namespace cv;
 
-Mat output, srcInitialized, srcCroppedHD,srcObsInit;
-
 /* Fonction permettant de detecter un obstacle
  *
  *  Paramètres:
@@ -28,6 +26,7 @@ Mat output, srcInitialized, srcCroppedHD,srcObsInit;
  */
 cv::Point2f detectObstacle(cv::Mat src, char weather, int boatSize){
 
+	Mat output, srcInitialized, srcCroppedHD,srcObsInit;
 
     /* Initialisation */
     output = src;

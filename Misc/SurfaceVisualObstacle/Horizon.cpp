@@ -3,8 +3,6 @@
 using namespace std;
 using namespace cv;
 
-Mat srcCropped, srcErode, srcGray, srcGrayEqualized, srcCanny, srcThresh, srcCroppedHorizon;
-
 /* 
     Fonction pour initialiser l'image:
 
@@ -15,12 +13,13 @@ Mat srcCropped, srcErode, srcGray, srcGrayEqualized, srcCanny, srcThresh, srcCro
 */
 cv::Mat initializeImage(cv::Mat src, int boatSize){
 
+	cv::Mat srcCropped, srcErode, srcGray, srcGrayEqualized;
+
     srcCropped = src(Rect(0,10, src.cols, src.rows - 10 - boatSize));
 
     cv::erode(srcCropped,srcErode,cv::Mat::ones(5,5,CV_8U));
 
     cv::cvtColor(srcErode, srcGray, CV_BGR2GRAY);
-
 
     cv::equalizeHist(srcGray, srcGrayEqualized);
 
@@ -44,6 +43,8 @@ cv::Mat initializeImage(cv::Mat src, int boatSize){
     Sortie: un vecteur de points contenant les
 */
 vector <Point> cannyHough(cv::Mat src, int line_length, int difference){
+
+	cv::Mat srcCanny, srcThresh;
 
     /* Application du filtre de Canny pour détecter les contours */
     double high_thres = cv::threshold( src, srcThresh, 0, 255, CV_THRESH_BINARY+CV_THRESH_OTSU );
@@ -97,7 +98,6 @@ vector <Point> cannyHough(cv::Mat src, int line_length, int difference){
     return houghPoint;
 }
 
-
 /*
     Fonction pour ajouter un triangle pour completer l'image decoupee par l'horizon
     Paramètre: image source
@@ -149,7 +149,7 @@ cv::Mat fillWithNothing(cv::Mat srcCropped, Point2i point1, Point2i point2, floa
         Sortie: l'image decoupee sur l'horizon.
 */
 cv::Mat estimateHorizon(Vec2f houghCoef, cv::Mat src, int boatSize){
-	cv::Mat srcCroppedEst;
+	cv::Mat srcCroppedEst, srcCroppedHorizon;
     float coef = houghCoef[0];
 
     float ord = houghCoef[1];
