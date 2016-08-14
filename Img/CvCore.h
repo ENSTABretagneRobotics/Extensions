@@ -104,7 +104,6 @@ Version status : Not finished
 #if (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4))
 #pragma GCC diagnostic pop
 #else
-//#pragma GCC diagnostic warning "-Wpragmas"
 //#pragma GCC diagnostic warning "-Wunknown-pragmas"
 //#pragma GCC diagnostic warning "-Wuninitialized"
 //#pragma GCC diagnostic warning "-Wcomment"
