@@ -63,6 +63,11 @@ Version status : Not finished
 
 // OpenCV headers.
 #if defined(OPENCV220) || defined(OPENCV231) || defined(OPENCV242) || defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310)
+// min and max might cause incompatibilities...
+#if !defined(DISABLE_MINMAX_UNDEFINITION)
+#undef max
+#undef min
+#endif // !defined(DISABLE_MINMAX_UNDEFINITION)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
 #if defined(OPENCV310)
 #include "opencv2/core/fast_math.hpp"
@@ -84,7 +89,8 @@ Version status : Not finished
 #include "opencv2/highgui/highgui.hpp"
 //#include "opencv2/contrib/contrib.hpp"
 #endif // __cplusplus
-// min and max may be undefined by OpenCV 2.X.X so we need to redefine them here...
+// min and max may be undefined so we need to redefine them here...
+#if !defined(DISABLE_MINMAX_REDEFINITION)
 #if !defined(NOMINMAX) || defined(FORCE_MINMAX_DEFINITION)
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -93,6 +99,7 @@ Version status : Not finished
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif // min
 #endif // !defined(NOMINMAX) || defined(FORCE_MINMAX_DEFINITION)
+#endif // !defined(DISABLE_MINMAX_REDEFINITION)
 #else
 #include "cv.h"
 #include "cvaux.h"
