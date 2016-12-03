@@ -8,8 +8,6 @@ Fabrice Le Bars
 
 Created : 2011-04-03
 
-Version status : To test and validate
-
 ***************************************************************************************************************:)*/
 
 #ifndef AXISOPTIONS_H

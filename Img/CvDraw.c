@@ -12,8 +12,6 @@ Fabrice Le Bars
 
 Created : 2009-03-27
 
-Version status : To test and validate
-
 ***************************************************************************************************************:)*/
 
 #include "CvDraw.h"

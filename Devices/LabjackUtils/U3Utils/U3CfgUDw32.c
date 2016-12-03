@@ -12,8 +12,6 @@ Some functions and parts of functions are from the examples provided by www.labj
 
 Created : 2009-03-28
 
-Version status : Not finished
-
 ***************************************************************************************************************:)*/
 
 #include "U3CfgUDw32.h"

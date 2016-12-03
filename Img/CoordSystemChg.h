@@ -8,8 +8,6 @@ Fabrice Le Bars
 
 Created : 2009-01-24
 
-Version status : To test and validate
-
 ***************************************************************************************************************:)*/
 
 #ifndef COORDSYSTEMCHG_H
