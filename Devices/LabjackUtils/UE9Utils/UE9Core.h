@@ -235,7 +235,7 @@ inline long ResetUE9USB(HANDLE hDevice, BOOL bHardReset)
       printf("ResetUE9USB error : read failed\n");
     else
       printf("ResetUE9USB error : did not read all of the buffer\n");
-      return -1;
+    return -1;
   }
 
   if ((uint8)(normalChecksum8(recBuff, 4)) != recBuff[0])
@@ -317,7 +317,7 @@ inline long ConfigWatchdogUE9(HANDLE hDevice, BOOL bEnable, SHORT timeout)
       printf("EnableWatchdogUE9USB error : read failed\n");
     else
       printf("EnableWatchdogUE9USB error : did not read all of the buffer\n");
-      return -1;
+    return -1;
   }
 
 	return 0;
