@@ -84,7 +84,7 @@ inline void _ProcessIncomingColorDataKinect2SDK(KINECT* pKinect)
 { 
 	IColorFrame *data = nullptr;
 	IFrameDescription *frameDesc = nullptr;
-	HRESULT hr = -1;
+	HRESULT hr = E_FAIL;
 	RGBQUAD *colorBuffer = nullptr;
 
 	hr = pKinect->colorFrameReader->AcquireLatestFrame(&data); 
@@ -114,7 +114,7 @@ inline void _ProcessIncomingDepthDataKinect2SDK(KINECT* pKinect)
 {
 	IDepthFrame *data = nullptr;
 	IFrameDescription *frameDesc = nullptr;
-	HRESULT hr = -1;
+	HRESULT hr = E_FAIL;
 	UINT16 *depthBuffer = nullptr;
 	USHORT nDepthMinReliableDistance = 0;
 	USHORT nDepthMaxReliableDistance = 0;
@@ -167,7 +167,7 @@ inline void _ProcessIncomingInfraredDataKinect2SDK(KINECT* pKinect)
 { 
 	IInfraredFrame *data = nullptr;
 	IFrameDescription *frameDesc = nullptr;
-	HRESULT hr = -1;
+	HRESULT hr = E_FAIL;
 	UINT16 *infraredBuffer = nullptr;
 	int height = 424, width = 512;
 
@@ -203,7 +203,7 @@ inline void _ProcessIncomingInfraredDataKinect2SDK(KINECT* pKinect)
 inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 {
 	KINECT* pKinect = NULL;
-	HRESULT hr = -1;
+	HRESULT hr = E_FAIL;
 
 	if (strncmp(filename, "Kinect2", strlen("Kinect2")) == 0)
 	{
@@ -385,7 +385,7 @@ inline IplImage* cvQueryFrameKinect2SDK(CvCapture* capture)
 inline void cvReleaseCaptureKinect2SDK(CvCapture** capture)
 {
 	KINECT* pKinect = (KINECT*)*capture;
-	HRESULT hr = -1;
+	HRESULT hr = E_FAIL;
 
 	if ((pKinect->type == KINECT_TYPE_COLOR)||(pKinect->type == KINECT_TYPE_DEPTH)||(pKinect->type == KINECT_TYPE_INFRARED))
 	{
