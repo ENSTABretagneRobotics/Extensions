@@ -1,6 +1,8 @@
 #ifndef MISC_H
 #define MISC_H
 
+#include "OSMisc.h"
+#include <vector>
 #include <deque>
 
 // Make template class instead of void*...
@@ -39,8 +41,8 @@ int PopDataFromProvider(PROVIDER p, std::deque<void*> user, void** &pData)
 {
 	if (user.size() > 0)
 	{
-		*pData = user[user.size()-1];
-		user.pop_back();
+		*pData = user[0];
+		user.pop_front();
 		return EXIT_SUCCESS;
 	}
 	else
@@ -62,8 +64,8 @@ void testrtcm(){
 	}
 
 
-	unsigned char* data = RTCMusers[0][RTCMusers[0].size()-1];
-	RTCMusers[0].pop_back();
+	unsigned char* data = RTCMusers[0][0];
+	RTCMusers[0].pop_front();
 	memcpy(rtcmdata, data, MAX_NB_BYTES_RTCM_PART);
 	free(data);
 }
@@ -81,8 +83,8 @@ void testrtcm2(){
 	}
 
 
-	unsigned char rtcmbyte = RTCMusers[0][RTCMusers[0].size()-1];
-	RTCMusers[0].pop_back();
+	unsigned char rtcmbyte = RTCMusers[0][0];
+	RTCMusers[0].pop_front();
 }
 */
 

@@ -87,6 +87,7 @@ Created : 2009-03-26
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 //#include "opencv2/contrib/contrib.hpp"
+#endif // __cplusplus
 // min and max may be undefined so we need to redefine them here...
 #ifdef _WIN32
 #if !defined(NOMINMAX)
@@ -98,7 +99,6 @@ Created : 2009-03-26
 #endif // min
 #endif // !defined(NOMINMAX)
 #endif // _WIN32
-#endif // __cplusplus
 #else
 #include "cv.h"
 #include "cvaux.h"
