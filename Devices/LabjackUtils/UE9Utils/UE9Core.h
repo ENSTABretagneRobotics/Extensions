@@ -133,6 +133,27 @@ Debug macros specific to UE9Core.
 // a servomotor).
 #define PWM_DUTY_CYCLE_DEFAULT_UE9 (PULSE_WIDTH2TIMER_DUTY_CYCLE_UE9(1.5))
 
+union uShort_UE9
+{
+	uint16 v;  
+	uint8 c[2];
+};
+typedef union uShort_UE9 uShort_UE9;
+
+union uLong_UE9
+{
+	long v;  
+	uint8 c[4];
+};
+typedef union uLong_UE9 uLong_UE9;
+
+union uFloat_UE9
+{
+	float v;  
+	uint8 c[4];
+};
+typedef union uFloat_UE9 uFloat_UE9;
+
 #ifdef _WIN32
 inline long ResetUE9USB(long hDevice, BOOL bHardReset)
 {
@@ -269,7 +290,7 @@ inline long ConfigWatchdogUE9(HANDLE hDevice, BOOL bEnable, SHORT timeout)
 {
   uint8 sendBuff[16], recBuff[8];
   int sendChars, recChars;
-  uShort word;
+  uShort_UE9 word;
 
   sendBuff[1] = 0xF8; // Command byte.
   sendBuff[2] = 0x05; // Number of data words.

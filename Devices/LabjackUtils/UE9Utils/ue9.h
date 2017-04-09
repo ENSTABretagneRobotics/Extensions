@@ -94,6 +94,10 @@ typedef struct UE9_TDAC_CALIBRATION_INFORMATION ue9TdacCalibrationInfo;
 
 /*   Functions   */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 void normalChecksum( uint8 *b,
                      int n);
 //Adds checksum to a data packet for normal command format.
@@ -463,6 +467,10 @@ long ehTimerCounter( HANDLE hDevice,
 //low-level command and response bytes (not including checksum and command bytes) as its parameter
 //and performs a TimerCounter call with the UE9.  Returns -1 or errorcode (>1 value) on error, 0
 //on success.
+
+#ifdef __cplusplus
+}
+#endif
 
 
 /* Easy Functions Constants */

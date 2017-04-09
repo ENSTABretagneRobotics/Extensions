@@ -75,6 +75,10 @@ typedef struct U3_LJTDAC_CALIBRATION_INFORMATION u3LJTDACCalibrationInfo;
 
 /* Functions */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 void normalChecksum( uint8 *b,
                      int n);
 //Adds checksum to a data packet for normal command format.
@@ -577,6 +581,10 @@ long ehFeedback( HANDLE hDevice,
 //low-level command and response bytes (not including checksum and command
 //bytes) as its parameter and performs a Feedback call with the U3.  Returns -1
 //or errorcode (>1 value) on error, 0 on success.
+
+#ifdef __cplusplus
+}
+#endif
 
 
 /* Easy function constants */

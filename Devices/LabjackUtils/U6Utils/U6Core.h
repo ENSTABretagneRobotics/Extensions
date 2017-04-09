@@ -144,6 +144,27 @@ Debug macros specific to U6Core.
 // a servomotor).
 #define PWM_DUTY_CYCLE_DEFAULT_U6 (PULSE_WIDTH2TIMER_DUTY_CYCLE_U6(1.5))
 
+union uShort_U6
+{
+	uint16 v;  
+	uint8 c[2];
+};
+typedef union uShort_U6 uShort_U6;
+
+union uLong_U6
+{
+	long v;  
+	uint8 c[4];
+};
+typedef union uLong_U6 uLong_U6;
+
+union uFloat_U6
+{
+	float v;  
+	uint8 c[4];
+};
+typedef union uFloat_U6 uFloat_U6;
+
 #ifdef _WIN32
 inline long ResetU6USB(long hDevice, BOOL bHardReset)
 {
@@ -277,7 +298,7 @@ inline long ConfigWatchdogU6(HANDLE hDevice, BOOL bEnable, SHORT timeout)
 {
   uint8 sendBuff[16], recBuff[8];
   int sendChars, recChars;
-  uShort word;
+  uShort_U6 word;
 
   sendBuff[1] = 0xF8; // Command byte.
   sendBuff[2] = 0x05; // Number of data words.

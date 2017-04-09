@@ -146,6 +146,27 @@ Debug macros specific to U3Core.
 // a servomotor).
 #define PWM_DUTY_CYCLE_DEFAULT_U3 (PULSE_WIDTH2TIMER_DUTY_CYCLE_U3(1.5))
 
+union uShort_U3
+{
+	uint16 v;  
+	uint8 c[2];
+};
+typedef union uShort_U3 uShort_U3;
+
+union uLong_U3
+{
+	long v;  
+	uint8 c[4];
+};
+typedef union uLong_U3 uLong_U3;
+
+union uFloat_U3
+{
+	float v;  
+	uint8 c[4];
+};
+typedef union uFloat_U3 uFloat_U3;
+
 #ifdef _WIN32
 inline long ResetU3USB(long hDevice, BOOL bHardReset)
 {
@@ -276,7 +297,7 @@ inline long ConfigWatchdogU3(HANDLE hDevice, BOOL bEnable, SHORT timeout)
 {
   uint8 sendBuff[16], recBuff[8];
   int sendChars, recChars;
-  uShort word;
+  uShort_U3 word;
 
   sendBuff[1] = 0xF8; // Command byte.
   sendBuff[2] = 0x05; // Number of data words.
