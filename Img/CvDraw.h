@@ -19,6 +19,63 @@ Created : 2009-03-27
 
 #include "CvCore.h"
 
+inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor)
+{
+	(*pColorid)++;
+	switch (*pColorid)
+	{
+	case 0:
+		*pColor = CV_RGB(0, 255, 128);
+		break;
+	case 1:
+		*pColor = CV_RGB(255, 128, 0);
+		break;
+	case 2:
+		*pColor = CV_RGB(128, 0, 255);
+		break;
+	case 3:
+		*pColor = CV_RGB(128, 255, 0);
+		break;
+	case 4:
+		*pColor = CV_RGB(255, 0, 128);
+		break;
+	case 5:
+		*pColor = CV_RGB(0, 128, 255);
+		break;
+	case 6:
+		*pColor = CV_RGB(0, 255, 0);
+		break;
+	case 7:
+		*pColor = CV_RGB(255, 0, 0);
+		break;
+	case 8:
+		*pColor = CV_RGB(0, 0, 255);
+		break;
+	case 9:
+		*pColor = CV_RGB(255, 255, 0);
+		break;
+	case 10:
+		*pColor = CV_RGB(255, 0, 255);
+		break;
+	case 11:
+		*pColor = CV_RGB(0, 255, 255);
+		break;
+	case 12:
+		*pColor = CV_RGB(0, 0, 0);
+		break;
+	case 13:
+		*pColor = CV_RGB(128, 128, 128);
+		break;
+	case 14:
+		*pColor = CV_RGB(255, 255, 255);
+		break;
+	default:
+		*pColorid = 0;
+		*pColor = defaultcolor;
+		break;
+	}
+}
+
 /*
 Clear an IplImage (set all the pixels to the same color). 
 See the documentation of OpenCV for more information. 
