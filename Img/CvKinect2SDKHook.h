@@ -53,21 +53,21 @@ inline void SAFERELEASEKINECT2SDK(Interface *& pInterfaceToRelease)
 
 inline void _ReleaseKinect2SDK(KINECT** ppKinect)
 {
-	if (!*ppKinect)
+	if (*ppKinect)
 	{
 		if ((*ppKinect)->infraredimg) 
 		{
-			free((*ppKinect)->infraredimg);
+			cvReleaseImage(&(*ppKinect)->infraredimg);
 			(*ppKinect)->infraredimg = NULL;
 		}
 		if ((*ppKinect)->depthimg) 
 		{
-			free((*ppKinect)->depthimg);
+			cvReleaseImage(&(*ppKinect)->depthimg);
 			(*ppKinect)->depthimg = NULL;
 		}
 		if ((*ppKinect)->colorimg) 
 		{
-			free((*ppKinect)->colorimg);
+			cvReleaseImage(&(*ppKinect)->colorimg);
 			(*ppKinect)->colorimg = NULL;
 		}
 		SAFERELEASEKINECT2SDK((*ppKinect)->infraredFrameReader);
@@ -236,6 +236,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (FAILED(hr))
 		{
 			printf("IKinectSensor::get_ColorFrameSource() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -244,6 +245,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		{
 			printf("IColorFrameSource::OpenReader() failed.\n");
 			SAFERELEASEKINECT2SDK(colorFrameSource);
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -252,6 +254,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (!pKinect->colorimg)
 		{
 			printf("cvCreateImage() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -265,6 +268,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (FAILED(hr))
 		{
 			printf("IKinectSensor::get_DepthFrameSource() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -273,6 +277,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		{
 			printf("IDepthFrameSource::OpenReader() failed.\n");
 			SAFERELEASEKINECT2SDK(depthFrameSource);
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -281,6 +286,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (!pKinect->depthimg)
 		{
 			printf("cvCreateImage() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -294,6 +300,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (FAILED(hr))
 		{
 			printf("IKinectSensor::get_InfraredFrameSource() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -302,6 +309,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		{
 			printf("IInfraredFrameSource::OpenReader() failed.\n");
 			SAFERELEASEKINECT2SDK(infraredFrameSource);
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
@@ -310,6 +318,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 		if (!pKinect->infraredimg)
 		{
 			printf("cvCreateImage() failed.\n");
+			pKinect->kinectSensor->Close();
 			_ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
