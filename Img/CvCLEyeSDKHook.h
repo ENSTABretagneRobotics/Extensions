@@ -77,6 +77,7 @@ inline CvCapture* cvCreateFileCaptureCLEyeSDK(const char* filename)
 {
 	CLEYE* pCLEye = NULL;
 	int id = 0, w = 0, h = 0;
+	GUID guid_null = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } }; // GUID_NULL standard constant might not be always defined...
 
 	if (strncmp(filename, "CLEye", strlen("CLEye")) == 0)
 	{
@@ -88,6 +89,12 @@ inline CvCapture* cvCreateFileCaptureCLEyeSDK(const char* filename)
 		}
 		if (sscanf(filename, "CLEye%d", &id) == 1) pCLEye->_cameraGUID = CLEyeGetCameraUUID(id);
 		else pCLEye->_cameraGUID = CLEyeGetCameraUUID(0);
+		if (pCLEye->_cameraGUID == guid_null)
+		{
+			printf("CLEyeGetCameraUUID() failed.\n");
+			_ReleaseCLEyeSDK(&pCLEye);
+			return NULL;
+		}
 		pCLEye->_cam = CLEyeCreateCamera(pCLEye->_cameraGUID, CLEYE_COLOR_PROCESSED, CLEYE_VGA, 30);
 		if (pCLEye->_cam == NULL)
 		{
