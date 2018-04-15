@@ -88,4 +88,4 @@ void testrtcm2(){
 }
 */
 
-#endif // MISC_H
+#endif // !MISC_H

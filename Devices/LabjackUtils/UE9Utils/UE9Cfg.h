@@ -176,12 +176,12 @@ inline int OpenUE9(HUE9* phUE9, char* szDevice)
 	if ((eDAC((*phUE9)->hDev, 
 #ifndef _WIN32
 		&(*phUE9)->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC0, 0, 0, 0, 0) != LJE_NOERROR) || 
 		(eDAC((*phUE9)->hDev, 
 #ifndef _WIN32
 		&(*phUE9)->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC1, 0, 0, 0, 0) != LJE_NOERROR))
 	{
 		PRINT_DEBUG_ERROR_UE9CFG(("OpenUE9 error (%s) : %s"
@@ -374,7 +374,7 @@ inline int SetVoltageUE9(HUE9 hUE9, double voltage, long pin)
 	if (eDAC(hUE9->hDev, 
 #ifndef _WIN32
 		&hUE9->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		pin, voltage, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_UE9CFG(("SetVoltageUE9 error (%s) : %s"
@@ -403,7 +403,7 @@ inline int GetVoltageUE9(HUE9 hUE9, double* pVoltage, long pin)
 	if (eAIN(hUE9->hDev, 
 #ifndef _WIN32
 		&hUE9->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		pin, 0, pVoltage, LJ_rgUNI5V, 12, 0, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_UE9CFG(("GetVoltageUE9 error (%s) : %s"
@@ -432,7 +432,7 @@ inline int GetTemperatureUE9(HUE9 hUE9, double* pTemperature)
 	if (eAIN(hUE9->hDev, 
 #ifndef _WIN32
 		&hUE9->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		TEMPERATURE_SENSOR_CHANNEL, 0, pTemperature, LJ_rgUNI5V, 12, 0, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_UE9CFG(("GetTemperatureUE9 error (%s) : %s"
@@ -535,12 +535,12 @@ inline int CloseUE9(HUE9* phUE9)
 	if ((eDAC((*phUE9)->hDev, 
 #ifndef _WIN32
 		&(*phUE9)->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC0, 0, 0, 0, 0) != LJE_NOERROR) || 
 		(eDAC((*phUE9)->hDev, 
 #ifndef _WIN32
 		&(*phUE9)->caliInfo, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC1, 0, 0, 0, 0) != LJE_NOERROR))
 	{
 		bError = TRUE;
@@ -576,4 +576,4 @@ inline int CloseUE9(HUE9* phUE9)
 	return EXIT_SUCCESS;
 }
 
-#endif // UE9CFG_H
+#endif // !UE9CFG_H

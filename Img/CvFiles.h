@@ -115,4 +115,4 @@ inline int SaveDefaultGrayCvImgToFile(IplImage* pImg, char* filename)
 	return EXIT_SUCCESS;
 }
 
-#endif // CVFILES_H
+#endif // !CVFILES_H

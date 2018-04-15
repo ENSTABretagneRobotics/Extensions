@@ -27,4 +27,4 @@ struct _COORDSYSTEM
 };
 typedef struct _COORDSYSTEM COORDSYSTEM;
 
-#endif // COORDSYSTEM_H
+#endif // !COORDSYSTEM_H

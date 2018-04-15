@@ -207,4 +207,4 @@ inline double GetCSPixelSizeY(COORDSYSTEM2IMG* pCS2Img)
 	return pCS2Img->YIRatio;
 }
 
-#endif // COORDSYSTEM2IMG_H
+#endif // !COORDSYSTEM2IMG_H

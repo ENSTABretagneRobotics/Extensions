@@ -24,7 +24,7 @@
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
 #include "opencv/cvaux.h"
-#endif // INCLUDE_HEADERS_OUTSIDE_CVCLEYESDKHOOK
+#endif // !INCLUDE_HEADERS_OUTSIDE_CVCLEYESDKHOOK
 
 #define CLEYE_TYPE_COLOR_PROCESSED 128
 
@@ -231,4 +231,4 @@ inline void cvReleaseCaptureCLEyeSDK(CvCapture** capture)
 #define cvQueryFrame cvQueryFrameCLEyeSDK
 #define cvReleaseCapture cvReleaseCaptureCLEyeSDK
 
-#endif // CVCLEYESDKHOOK_H
+#endif // !CVCLEYESDKHOOK_H

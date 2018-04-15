@@ -27,4 +27,4 @@ struct _AXISOPTIONS
 };
 typedef struct _AXISOPTIONS AXISOPTIONS;
 
-#endif // AXISOPTIONS_H
+#endif // !AXISOPTIONS_H

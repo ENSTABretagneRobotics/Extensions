@@ -146,4 +146,4 @@ inline int CS2ToCS1Chg(COORDSYSTEMCHG* pCSChg, double* pX1, double* pY1, double 
 	return EXIT_SUCCESS;
 }
 
-#endif // COORDSYSTEMCHG_H
+#endif // !COORDSYSTEMCHG_H

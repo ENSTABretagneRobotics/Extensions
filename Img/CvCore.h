@@ -93,10 +93,10 @@ Created : 2009-03-26
 #if !defined(NOMINMAX)
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif // max
+#endif // !max
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif // min
+#endif // !min
 #endif // !defined(NOMINMAX)
 #endif // _WIN32
 #else
@@ -592,4 +592,4 @@ inline void SetDefaultGrayCvImgPixel(IplImage* pImg, int i, int j, UCHAR value)
 	pImg->imageData[j+pImg->width*i] = value;
 }
 
-#endif // CVCORE_H
+#endif // !CVCORE_H

@@ -335,4 +335,4 @@ inline void DispDefaultGrayCvImgExSP(IplImage* pImg,
 }
 #endif // __BCPLUSPLUS__
 
-#endif // CVDISP_H
+#endif // !CVDISP_H

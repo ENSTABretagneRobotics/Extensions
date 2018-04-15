@@ -198,4 +198,4 @@ inline int orange_ball_detection(IplImage* pImg, int *X, int *Y, int *W, int *H)
 	return EXIT_SUCCESS;
 }
 
-#endif // CVPROC_H
+#endif // !CVPROC_H

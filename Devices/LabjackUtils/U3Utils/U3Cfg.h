@@ -182,13 +182,13 @@ inline int OpenU3(HU3* phU3, char* szDevice)
 #ifndef _WIN32
 		&(*phU3)->caliInfo, 
 		1, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC0, 0, 0, 0, 0) != LJE_NOERROR) || 
 		(eDAC((*phU3)->hDev, 
 #ifndef _WIN32
 		&(*phU3)->caliInfo, 
 		1, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC1, 0, 0, 0, 0) != LJE_NOERROR))
 	{
 		PRINT_DEBUG_ERROR_U3CFG(("OpenU3 error (%s) : %s"
@@ -388,7 +388,7 @@ inline int SetVoltageU3(HU3 hU3, double voltage, long pin)
 #ifndef _WIN32
 		&hU3->caliInfo, 
 		1, 
-#endif // _WIN32
+#endif // !_WIN32
 		pin, voltage, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_U3CFG(("SetVoltageU3 error (%s) : %s"
@@ -416,14 +416,14 @@ inline int GetVoltageU3(HU3 hU3, double* pVoltage, long pin)
 {
 #ifndef _WIN32
 	long DAC1Enable = 0;
-#endif // _WIN32
+#endif // !_WIN32
 
 	if (eAIN(hU3->hDev, 
 #ifndef _WIN32
 		&hU3->caliInfo, 
 		1, 
 		&DAC1Enable, 
-#endif // _WIN32
+#endif // !_WIN32
 		pin, NEGATIVE_CHANNEL_FOR_SINGLE_ENDED_U3, pVoltage, 0, 0, 0, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_U3CFG(("GetVoltageU3 error (%s) : %s"
@@ -451,14 +451,14 @@ inline int GetTemperatureU3(HU3 hU3, double* pTemperature)
 {
 #ifndef _WIN32
 	long DAC1Enable = 0;
-#endif // _WIN32
+#endif // !_WIN32
 
 	if (eAIN(hU3->hDev, 
 #ifndef _WIN32
 		&hU3->caliInfo, 
 		1, 
 		&DAC1Enable, 
-#endif // _WIN32
+#endif // !_WIN32
 		TEMPERATURE_SENSOR_CHANNEL_U3, NEGATIVE_CHANNEL_FOR_SINGLE_ENDED_U3, pTemperature, 0, 0, 0, 0, 0, 0) != LJE_NOERROR)
 	{
 		PRINT_DEBUG_ERROR_U3CFG(("GetTemperatureU3 error (%s) : %s"
@@ -568,13 +568,13 @@ inline int CloseU3(HU3* phU3)
 #ifndef _WIN32
 		&(*phU3)->caliInfo, 
 		1, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC0, 0, 0, 0, 0) != LJE_NOERROR) || 
 		(eDAC((*phU3)->hDev, 
 #ifndef _WIN32
 		&(*phU3)->caliInfo, 
 		1, 
-#endif // _WIN32
+#endif // !_WIN32
 		DAC1, 0, 0, 0, 0) != LJE_NOERROR))
 	{
 		bError = TRUE;
@@ -610,4 +610,4 @@ inline int CloseU3(HU3* phU3)
 	return EXIT_SUCCESS;
 }
 
-#endif // U3CFG_H
+#endif // !U3CFG_H

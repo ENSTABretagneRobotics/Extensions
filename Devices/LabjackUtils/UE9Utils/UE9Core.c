@@ -17,6 +17,4 @@ Created : 2009-03-28
 
 #ifndef _WIN32
 const long LJE_NOERROR = 0;
-#endif // _WIN32
-
-
+#endif // !_WIN32

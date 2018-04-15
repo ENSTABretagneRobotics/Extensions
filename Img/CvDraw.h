@@ -336,4 +336,4 @@ inline void FillCircleDefaultGrayCvImg(IplImage* pImg, int i, int j, int radius,
 	cvCircle(pImg, center, radius, cvRealScalar(value), CV_FILLED, 8, 0);
 }
 
-#endif // CVDRAW_H
+#endif // !CVDRAW_H

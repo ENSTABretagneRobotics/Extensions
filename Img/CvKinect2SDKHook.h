@@ -22,7 +22,7 @@
 #include "opencv2/core/core_c.h"
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
-#endif // INCLUDE_HEADERS_OUTSIDE_CVKINECT2SDKHOOK
+#endif // !INCLUDE_HEADERS_OUTSIDE_CVKINECT2SDKHOOK
 
 #define KINECT_TYPE_COLOR 16
 #define KINECT_TYPE_DEPTH 32
@@ -414,4 +414,4 @@ inline void cvReleaseCaptureKinect2SDK(CvCapture** capture)
 #define cvQueryFrame cvQueryFrameKinect2SDK
 #define cvReleaseCapture cvReleaseCaptureKinect2SDK
 
-#endif // CVKINECT2SDKHOOK_H
+#endif // !CVKINECT2SDKHOOK_H

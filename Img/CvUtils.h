@@ -23,4 +23,4 @@ Created : 2009-03-26
 #include "CvDraw.h"
 #include "CvProc.h"
 
-#endif // CVUTILS_H
+#endif // !CVUTILS_H

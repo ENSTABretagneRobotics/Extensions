@@ -358,4 +358,4 @@ inline long CloseU3USB(HANDLE hDevice)
 }
 #endif // _WIN32
 
-#endif // U3CORE_H
+#endif // !U3CORE_H

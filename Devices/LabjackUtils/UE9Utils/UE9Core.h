@@ -352,4 +352,4 @@ inline long CloseUE9USB(HANDLE hDevice)
 }
 #endif // _WIN32
 
-#endif // UE9CORE_H
+#endif // !UE9CORE_H
