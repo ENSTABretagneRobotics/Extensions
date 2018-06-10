@@ -89,16 +89,14 @@ Created : 2009-03-26
 //#include "opencv2/contrib/contrib.hpp"
 #endif // __cplusplus
 // min and max may be undefined so we need to redefine them here...
-#ifdef _WIN32
-#if !defined(NOMINMAX)
+#ifdef _MSC_VER
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif // !max
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif // !min
-#endif // !defined(NOMINMAX)
-#endif // _WIN32
+#endif // _MSC_VER
 #else
 #include "cv.h"
 #include "cvaux.h"

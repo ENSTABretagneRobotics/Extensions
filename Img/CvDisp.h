@@ -23,6 +23,17 @@ Created : 2009-02-12
 #include <ExtCtrls.hpp>
 #endif // __BCPLUSPLUS__
 
+// Need to be undefined at the end of the file...
+// min and max might cause incompatibilities with GCC...
+#ifndef _MSC_VER
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif // !max
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif // !min
+#endif // !_MSC_VER
+
 #ifdef _WIN32
 /*
 Display an IplImage in a window. The picture is stretched to fit in the 
@@ -334,5 +345,15 @@ inline void DispDefaultGrayCvImgExSP(IplImage* pImg,
 				   bStretch, bFlipV, bFlipH, pColors);
 }
 #endif // __BCPLUSPLUS__
+
+// min and max might cause incompatibilities with GCC...
+#ifndef _MSC_VER
+#ifdef max
+#undef max
+#endif // max
+#ifdef min
+#undef min
+#endif // min
+#endif // !_MSC_VER
 
 #endif // !CVDISP_H
