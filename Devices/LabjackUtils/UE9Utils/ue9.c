@@ -686,7 +686,7 @@ long eDAC(HANDLE Handle, ue9CalibrationInfo *CalibrationInfo, long Channel, doub
 
 long eDI(HANDLE Handle, long Channel, long *State)
 {
-    uint8 state;
+    uint8 state = 0;
 
     if (Channel > 22)
     {
