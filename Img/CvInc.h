@@ -83,6 +83,18 @@ Created : 2018-08-07
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 //#include "opencv2/contrib/contrib.hpp"
+// Some macros might be missing in OpenCV4.0.0...
+#if defined(OPENCV400)
+#ifndef CV_CAP_PROP_FRAME_WIDTH
+#define CV_CAP_PROP_FRAME_WIDTH cv::CAP_PROP_FRAME_WIDTH
+#endif // !CV_CAP_PROP_FRAME_WIDTH
+#ifndef CV_CAP_PROP_FRAME_HEIGHT
+#define CV_CAP_PROP_FRAME_HEIGHT cv::CAP_PROP_FRAME_HEIGHT
+#endif // !CV_CAP_PROP_FRAME_HEIGHT
+#ifndef CV_FOURCC
+#define CV_FOURCC cv::VideoWriter::fourcc
+#endif // !CV_FOURCC
+#endif // defined(OPENCV400)
 #endif // __cplusplus
 // min and max may be undefined so we need to redefine them here...
 #ifdef _MSC_VER
@@ -98,6 +110,19 @@ Created : 2018-08-07
 #include "cvaux.h"
 #include "highgui.h"
 #endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
+
+// The ENTER key code seems to vary depending on OpenCV versions...
+#ifndef CV_KEY_CODE_ENTER
+#ifdef _WIN32
+#define CV_KEY_CODE_ENTER 13 
+#else
+#if defined(OPENCV400)
+#define CV_KEY_CODE_ENTER 13 
+#else
+#define CV_KEY_CODE_ENTER 10
+#endif // defined(OPENCV400)
+#endif // _WIN32
+#endif // !CV_KEY_CODE_ENTER
 
 #ifdef __GNUC__
 // Restore the GCC warnings previously disabled.
