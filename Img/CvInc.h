@@ -52,31 +52,34 @@ Created : 2018-08-07
 #endif // __GNUC__
 
 // OpenCV headers.
-#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
 // After OpenCV 3.2.0, C mode will probably not build any more due to several problems in core OpenCV headers...
-#if defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+// Starting with OpenCV 4.0.0, most of the C headers have been removed...
+#if defined(OPENCV320) || defined(OPENCV342)
 #include "opencv2/core/fast_math.hpp"
-#endif // defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#endif // defined(OPENCV320) || defined(OPENCV342)
 //#include "opencv/cv.h" // Sometimes cause strange errors in debug and C++ mode due to the redefinition of free()...
 //#include "opencv/cvwimage.h"
 //#include "opencv/cxcore.h"
 //#include "opencv/highgui.h"
 #include "opencv2/core/core_c.h"
-#if defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#if defined(OPENCV320) || defined(OPENCV342)
 #include "opencv2/imgcodecs/imgcodecs_c.h"
-#endif // defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#endif // defined(OPENCV320) || defined(OPENCV342)
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
 // The following headers do not build in C mode.
 #ifdef __cplusplus
+#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342)
 #include "opencv/cvaux.h"
 //#include "opencv/cxmisc.h"
 //#include "opencv/ml.h"
+#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342)
 #include "opencv2/core/core.hpp"
-#if defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#if defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
 #include "opencv2/imgcodecs/imgcodecs.hpp"
-#endif // defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#endif // defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 //#include "opencv2/contrib/contrib.hpp"
@@ -94,7 +97,7 @@ Created : 2018-08-07
 #include "cv.h"
 #include "cvaux.h"
 #include "highgui.h"
-#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV310) || defined(OPENCV320) || defined(OPENCV342)
+#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
 
 #ifdef __GNUC__
 // Restore the GCC warnings previously disabled.
