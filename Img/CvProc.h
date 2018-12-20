@@ -33,6 +33,184 @@ inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 	return EXIT_SUCCESS;
 }
 
+inline int CopyResizeScale(IplImage* srcimg, IplImage* destimg, BOOL bCropOnResize)
+{
+	IplImage* resizedimg = NULL;
+	IplImage* warpedimg = NULL;
+	double m[6];
+	CvMat M = cvMat(2, 3, CV_64F, m);
+	double ratio = 1, hscale = 1, vscale = 1, hcenter = 0, vcenter = 0, hshift = 0, vshift = 0, angle = 0;
+
+	if ((srcimg->width == destimg->width)&&(srcimg->height == destimg->height))
+	{
+		cvCopy(srcimg, destimg, 0);
+	}
+	else
+	{
+		resizedimg = cvCreateImage(cvSize(destimg->width, destimg->height), destimg->depth, destimg->nChannels);
+		if (!resizedimg)
+		{
+			return EXIT_FAILURE;
+		}
+
+		cvResize(srcimg, resizedimg, CV_INTER_LINEAR);
+
+		ratio = (double)srcimg->width*(double)resizedimg->height/((double)srcimg->height*(double)resizedimg->width);
+
+		if (bCropOnResize)
+		{
+			if (ratio >= 1)
+			{
+				hscale = ratio;
+				vscale = 1;
+			}
+			else
+			{
+				hscale = 1;
+				vscale = ratio;
+			}
+		}
+		else
+		{
+			if (ratio >= 1)
+			{
+				hscale = 1;
+				vscale = 1/ratio;
+			}
+			else
+			{
+				hscale = 1/ratio;
+				vscale = 1;
+			}
+		}
+
+		if ((hscale == 1)&&(vscale == 1))
+		{
+			cvCopy(resizedimg, destimg, 0);
+			cvReleaseImage(&resizedimg);
+		}
+		else
+		{
+			warpedimg = cvCreateImage(cvSize(destimg->width, destimg->height), destimg->depth, destimg->nChannels);
+			if (!warpedimg)
+			{
+				cvReleaseImage(&resizedimg);
+				return EXIT_FAILURE;
+			}
+
+			// Create a map_matrix, where the left 2x2 matrix is the transform and the right 2x1 is the dimensions.
+
+			hcenter = resizedimg->width*0.5+hcenter;
+			vcenter = resizedimg->height*0.5+vcenter;
+			hshift = resizedimg->width*0.5+hshift;
+			vshift = resizedimg->height*0.5+vshift;
+
+			m[0] = cos(angle)/hscale;
+			m[1] = sin(angle)/hscale;
+			m[3] = -sin(angle)/vscale;
+			m[4] = cos(angle)/vscale;
+			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
+			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+			cvWarpAffine(resizedimg, warpedimg, &M, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS+CV_WARP_INVERSE_MAP, cvScalarAll(0));
+
+			cvReleaseImage(&resizedimg);
+			cvCopy(warpedimg, destimg, 0);
+			cvReleaseImage(&warpedimg);
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
+inline int CopyResizeScaleOverlay(IplImage* overlayimg, IplImage* destimg, BOOL bCropOnResize)
+{
+	IplImage* resizedimg = NULL;
+	IplImage* warpedimg = NULL;
+	double m[6];
+	CvMat M = cvMat(2, 3, CV_64F, m);
+	double ratio = 1, hscale = 1, vscale = 1, hcenter = 0, vcenter = 0, hshift = 0, vshift = 0, angle = 0;
+
+	if ((overlayimg->width == destimg->width)&&(overlayimg->height == destimg->height))
+	{
+		CopyOverlay(overlayimg, destimg);
+	}
+	else
+	{
+		resizedimg = cvCreateImage(cvSize(destimg->width, destimg->height), destimg->depth, destimg->nChannels);
+		if (!resizedimg)
+		{
+			return EXIT_FAILURE;
+		}
+
+		cvResize(overlayimg, resizedimg, CV_INTER_LINEAR);
+
+		ratio = (double)overlayimg->width*(double)resizedimg->height/((double)overlayimg->height*(double)resizedimg->width);
+
+		if (bCropOnResize)
+		{
+			if (ratio >= 1)
+			{
+				hscale = ratio;
+				vscale = 1;
+			}
+			else
+			{
+				hscale = 1;
+				vscale = ratio;
+			}
+		}
+		else
+		{
+			if (ratio >= 1)
+			{
+				hscale = 1;
+				vscale = 1/ratio;
+			}
+			else
+			{
+				hscale = 1/ratio;
+				vscale = 1;
+			}
+		}
+
+		if ((hscale == 1)&&(vscale == 1))
+		{
+			CopyOverlay(resizedimg, destimg);
+			cvReleaseImage(&resizedimg);
+		}
+		else
+		{
+			warpedimg = cvCreateImage(cvSize(destimg->width, destimg->height), destimg->depth, destimg->nChannels);
+			if (!warpedimg)
+			{
+				cvReleaseImage(&resizedimg);
+				return EXIT_FAILURE;
+			}
+
+			// Create a map_matrix, where the left 2x2 matrix is the transform and the right 2x1 is the dimensions.
+
+			hcenter = resizedimg->width*0.5+hcenter;
+			vcenter = resizedimg->height*0.5+vcenter;
+			hshift = resizedimg->width*0.5+hshift;
+			vshift = resizedimg->height*0.5+vshift;
+
+			m[0] = cos(angle)/hscale;
+			m[1] = sin(angle)/hscale;
+			m[3] = -sin(angle)/vscale;
+			m[4] = cos(angle)/vscale;
+			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
+			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+			cvWarpAffine(resizedimg, warpedimg, &M, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS+CV_WARP_INVERSE_MAP, cvScalarAll(0));
+
+			cvReleaseImage(&resizedimg);
+			CopyOverlay(warpedimg, destimg);
+			cvReleaseImage(&warpedimg);
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
 inline void CorrectImageBorders(IplImage* image, int nbpixborder, unsigned char r0, unsigned char g0, unsigned char b0)
 {
 	int i = 0, j = 0, index = 0;
