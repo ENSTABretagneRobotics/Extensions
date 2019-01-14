@@ -16,6 +16,11 @@ Modified
 
 #include "ue9.h"
 
+// Disable some warnings.
+#ifdef __clang__
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic push
+#endif // __clang__
 
 ue9CalibrationInfo UE9_CALIBRATION_INFO_DEFAULT = {
     9,
@@ -1077,3 +1082,8 @@ long ehTimerCounter(HANDLE hDevice, uint8 inTimerClockDivisor, uint8 inEnableMas
 
     return recBuff[6];
 }
+
+// Restore the warnings previously disabled.
+#ifdef __clang__
+#pragma GCC diagnostic pop
+#endif // __clang__
