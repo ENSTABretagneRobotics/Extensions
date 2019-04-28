@@ -52,39 +52,69 @@ Created : 2018-08-07
 #endif // __GNUC__
 
 // OpenCV headers.
-#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
+#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV410)
+// This header should only contain simple C code without dependencies on other headers...
+#include "opencv2/core/version.hpp"
+#else
+#ifndef DISABLE_OPENCV_VERSION
+// This header should only contain simple C code without dependencies on other headers...
+#include "opencv2/core/version.hpp"
+#else
+// OpenCV 1.X.X...
+#include "cv.h"
+#include "cvaux.h"
+#include "highgui.h"
+#endif // !DISABLE_OPENCV_VERSION
+#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV410)
+
+#if (CV_MAJOR_VERSION >= 2)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
 // After OpenCV 3.2.0, C mode will probably not build any more due to several problems in core OpenCV headers...
 // Starting with OpenCV 4.0.0, most of the C headers have been removed...
-#if defined(OPENCV320) || defined(OPENCV342)
+#if (CV_MAJOR_VERSION == 3)
 #include "opencv2/core/fast_math.hpp"
-#endif // defined(OPENCV320) || defined(OPENCV342)
+#endif // (CV_MAJOR_VERSION == 3)
 //#include "opencv/cv.h" // Sometimes cause strange errors in debug and C++ mode due to the redefinition of free()...
 //#include "opencv/cvwimage.h"
 //#include "opencv/cxcore.h"
 //#include "opencv/highgui.h"
 #include "opencv2/core/core_c.h"
-#if defined(OPENCV320) || defined(OPENCV342)
+#if (CV_MAJOR_VERSION == 3)
 #include "opencv2/imgcodecs/imgcodecs_c.h"
-#endif // defined(OPENCV320) || defined(OPENCV342)
+#endif // (CV_MAJOR_VERSION == 3)
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
 // The following headers do not build in C mode.
 #ifdef __cplusplus
-#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342)
+#if ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
 #include "opencv/cvaux.h"
 //#include "opencv/cxmisc.h"
 //#include "opencv/ml.h"
-#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342)
+#endif // ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
 #include "opencv2/core/core.hpp"
-#if defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
+#if (CV_MAJOR_VERSION >= 3)
 #include "opencv2/imgcodecs/imgcodecs.hpp"
-#endif // defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
+#endif // (CV_MAJOR_VERSION >= 3)
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 //#include "opencv2/contrib/contrib.hpp"
+#endif // __cplusplus
+#endif // (CV_MAJOR_VERSION >= 2)
+
+// min and max may be undefined so we need to redefine them here...
+#if (CV_MAJOR_VERSION >= 2)
+#ifdef _MSC_VER
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif // !max
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif // !min
+#endif // _MSC_VER
+#endif // (CV_MAJOR_VERSION >= 2)
+
 // Some macros might be missing in OpenCV4.0.0...
-#if defined(OPENCV400)
+#if (CV_MAJOR_VERSION >= 4)
 #ifndef CV_CAP_PROP_FRAME_WIDTH
 #define CV_CAP_PROP_FRAME_WIDTH cv::CAP_PROP_FRAME_WIDTH
 #endif // !CV_CAP_PROP_FRAME_WIDTH
@@ -94,33 +124,18 @@ Created : 2018-08-07
 #ifndef CV_FOURCC
 #define CV_FOURCC cv::VideoWriter::fourcc
 #endif // !CV_FOURCC
-#endif // defined(OPENCV400)
-#endif // __cplusplus
-// min and max may be undefined so we need to redefine them here...
-#ifdef _MSC_VER
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif // !max
-#ifndef min
-#define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif // !min
-#endif // _MSC_VER
-#else
-#include "cv.h"
-#include "cvaux.h"
-#include "highgui.h"
-#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV400)
+#endif // (CV_MAJOR_VERSION >= 4)
 
 // The ENTER key code seems to vary depending on OpenCV versions...
 #ifndef CV_KEY_CODE_ENTER
 #ifdef _WIN32
 #define CV_KEY_CODE_ENTER 13 
 #else
-#if defined(OPENCV400)
+#if (CV_MAJOR_VERSION >= 4)
 #define CV_KEY_CODE_ENTER 13 
 #else
 #define CV_KEY_CODE_ENTER 10
-#endif // defined(OPENCV400)
+#endif // (CV_MAJOR_VERSION >= 4)
 #endif // _WIN32
 #endif // !CV_KEY_CODE_ENTER
 
