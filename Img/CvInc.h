@@ -114,6 +114,7 @@ Created : 2018-08-07
 #endif // (CV_MAJOR_VERSION >= 2)
 
 // Some macros might be missing depending on OpenCV versions...
+#ifndef DISABLE_OPENCV_COMPAT_MACROS
 #ifdef __cplusplus
 #if (CV_MAJOR_VERSION >= 4)
 #ifndef CV_CAP_PROP_FRAME_WIDTH
@@ -122,6 +123,15 @@ Created : 2018-08-07
 #ifndef CV_CAP_PROP_FRAME_HEIGHT
 #define CV_CAP_PROP_FRAME_HEIGHT cv::CAP_PROP_FRAME_HEIGHT
 #endif // !CV_CAP_PROP_FRAME_HEIGHT
+#ifndef CV_IMWRITE_JPEG_QUALITY
+#define CV_IMWRITE_JPEG_QUALITY cv::IMWRITE_JPEG_QUALITY
+#endif // !CV_IMWRITE_JPEG_QUALITY
+#ifndef CV_IMWRITE_PNG_COMPRESSION
+#define CV_IMWRITE_PNG_COMPRESSION cv::IMWRITE_PNG_COMPRESSION
+#endif // !CV_IMWRITE_PNG_COMPRESSION
+#ifndef CV_IMWRITE_PXM_BINARY
+#define CV_IMWRITE_PXM_BINARY cv::IMWRITE_PXM_BINARY
+#endif // !CV_IMWRITE_PXM_BINARY
 #ifndef CV_FOURCC
 #define CV_FOURCC cv::VideoWriter::fourcc
 #endif // !CV_FOURCC
@@ -129,11 +139,18 @@ Created : 2018-08-07
 #if (CV_MAJOR_VERSION < 3)
 namespace cv
 {
-	int CAP_PROP_FRAME_WIDTH = CV_CAP_PROP_FRAME_WIDTH;
-	int CAP_PROP_FRAME_HEIGHT = CV_CAP_PROP_FRAME_HEIGHT;
+	enum
+	{
+		CAP_PROP_FRAME_WIDTH = CV_CAP_PROP_FRAME_WIDTH,
+		CAP_PROP_FRAME_HEIGHT = CV_CAP_PROP_FRAME_HEIGHT
+	};
+
+	// Don't know how to define cv::VideoWriter::fourcc...
+
 }
 #endif // (CV_MAJOR_VERSION < 3)
 #endif // __cplusplus
+#endif // DISABLE_OPENCV_COMPAT_MACROS
 
 // The ENTER key code seems to vary depending on OpenCV versions...
 #ifndef CV_KEY_CODE_ENTER
