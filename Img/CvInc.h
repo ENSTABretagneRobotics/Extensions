@@ -113,7 +113,8 @@ Created : 2018-08-07
 #endif // _MSC_VER
 #endif // (CV_MAJOR_VERSION >= 2)
 
-// Some macros might be missing in OpenCV4.0.0...
+// Some macros might be missing depending on OpenCV versions...
+#ifdef __cplusplus
 #if (CV_MAJOR_VERSION >= 4)
 #ifndef CV_CAP_PROP_FRAME_WIDTH
 #define CV_CAP_PROP_FRAME_WIDTH cv::CAP_PROP_FRAME_WIDTH
@@ -125,6 +126,14 @@ Created : 2018-08-07
 #define CV_FOURCC cv::VideoWriter::fourcc
 #endif // !CV_FOURCC
 #endif // (CV_MAJOR_VERSION >= 4)
+#if (CV_MAJOR_VERSION < 3)
+namespace cv
+{
+	int CAP_PROP_FRAME_WIDTH = CV_CAP_PROP_FRAME_WIDTH;
+	int CAP_PROP_FRAME_HEIGHT = CV_CAP_PROP_FRAME_HEIGHT;
+}
+#endif // (CV_MAJOR_VERSION < 3)
+#endif // __cplusplus
 
 // The ENTER key code seems to vary depending on OpenCV versions...
 #ifndef CV_KEY_CODE_ENTER
@@ -138,6 +147,12 @@ Created : 2018-08-07
 #endif // (CV_MAJOR_VERSION >= 4)
 #endif // _WIN32
 #endif // !CV_KEY_CODE_ENTER
+
+#if (CV_MAJOR_VERSION >= 4)
+#ifndef USE_OPENCV_HIGHGUI_CPP_API
+#define USE_OPENCV_HIGHGUI_CPP_API
+#endif // !USE_OPENCV_HIGHGUI_CPP_API
+#endif // (CV_MAJOR_VERSION >= 4)
 
 #ifdef __GNUC__
 // Restore the GCC warnings previously disabled.
