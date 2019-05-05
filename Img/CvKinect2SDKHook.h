@@ -19,13 +19,28 @@
 #include <Kinect.h>
 #pragma comment(lib, "Kinect20.lib")
 
+#include "opencv2/core/version.hpp"
+
 #include "opencv2/core/core_c.h"
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
+#if (CV_MAJOR_VERSION == 3)
+#include "opencv2/imgcodecs/imgcodecs_c.h"
+#include "opencv2/videoio/videoio_c.h"
+#endif // (CV_MAJOR_VERSION == 3)
+#if (CV_MAJOR_VERSION >= 4)
+#include "opencv2/imgcodecs/legacy/constants_c.h"
+#include "opencv2/videoio/legacy/constants_c.h"
+#include "opencv2/videoio/videoio_c.h"
+#endif // (CV_MAJOR_VERSION >= 4)
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#if (CV_MAJOR_VERSION >= 3)
+#include "opencv2/imgcodecs/imgcodecs.hpp"
+#include "opencv2/videoio/videoio.hpp"
+#endif // (CV_MAJOR_VERSION >= 3)
 #endif // !INCLUDE_HEADERS_OUTSIDE_CVKINECT2SDKHOOK
 
 #define KINECT_TYPE_COLOR 16

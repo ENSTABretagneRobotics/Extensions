@@ -79,11 +79,17 @@ Created : 2018-08-07
 //#include "opencv/cxcore.h"
 //#include "opencv/highgui.h"
 #include "opencv2/core/core_c.h"
-#if (CV_MAJOR_VERSION == 3)
-#include "opencv2/imgcodecs/imgcodecs_c.h"
-#endif // (CV_MAJOR_VERSION == 3)
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
+#if (CV_MAJOR_VERSION == 3)
+#include "opencv2/imgcodecs/imgcodecs_c.h"
+#include "opencv2/videoio/videoio_c.h"
+#endif // (CV_MAJOR_VERSION == 3)
+#if (CV_MAJOR_VERSION >= 4)
+#include "opencv2/imgcodecs/legacy/constants_c.h"
+#include "opencv2/videoio/legacy/constants_c.h"
+#include "opencv2/videoio/videoio_c.h"
+#endif // (CV_MAJOR_VERSION >= 4)
 // The following headers do not build in C mode.
 #ifdef __cplusplus
 #if ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
@@ -92,11 +98,12 @@ Created : 2018-08-07
 //#include "opencv/ml.h"
 #endif // ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
 #include "opencv2/core/core.hpp"
-#if (CV_MAJOR_VERSION >= 3)
-#include "opencv2/imgcodecs/imgcodecs.hpp"
-#endif // (CV_MAJOR_VERSION >= 3)
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#if (CV_MAJOR_VERSION >= 3)
+#include "opencv2/imgcodecs/imgcodecs.hpp"
+#include "opencv2/videoio/videoio.hpp"
+#endif // (CV_MAJOR_VERSION >= 3)
 //#include "opencv2/contrib/contrib.hpp"
 #endif // __cplusplus
 #endif // (CV_MAJOR_VERSION >= 2)
@@ -116,26 +123,6 @@ Created : 2018-08-07
 // Some macros might be missing depending on OpenCV versions...
 #ifndef DISABLE_OPENCV_COMPAT_MACROS
 #ifdef __cplusplus
-#if (CV_MAJOR_VERSION >= 4)
-#ifndef CV_CAP_PROP_FRAME_WIDTH
-#define CV_CAP_PROP_FRAME_WIDTH cv::CAP_PROP_FRAME_WIDTH
-#endif // !CV_CAP_PROP_FRAME_WIDTH
-#ifndef CV_CAP_PROP_FRAME_HEIGHT
-#define CV_CAP_PROP_FRAME_HEIGHT cv::CAP_PROP_FRAME_HEIGHT
-#endif // !CV_CAP_PROP_FRAME_HEIGHT
-#ifndef CV_IMWRITE_JPEG_QUALITY
-#define CV_IMWRITE_JPEG_QUALITY cv::IMWRITE_JPEG_QUALITY
-#endif // !CV_IMWRITE_JPEG_QUALITY
-#ifndef CV_IMWRITE_PNG_COMPRESSION
-#define CV_IMWRITE_PNG_COMPRESSION cv::IMWRITE_PNG_COMPRESSION
-#endif // !CV_IMWRITE_PNG_COMPRESSION
-#ifndef CV_IMWRITE_PXM_BINARY
-#define CV_IMWRITE_PXM_BINARY cv::IMWRITE_PXM_BINARY
-#endif // !CV_IMWRITE_PXM_BINARY
-#ifndef CV_FOURCC
-#define CV_FOURCC cv::VideoWriter::fourcc
-#endif // !CV_FOURCC
-#endif // (CV_MAJOR_VERSION >= 4)
 #if (CV_MAJOR_VERSION < 3)
 namespace cv
 {
