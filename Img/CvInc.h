@@ -147,7 +147,11 @@ namespace cv
 #if (CV_MAJOR_VERSION >= 4)
 #define CV_KEY_CODE_ENTER 13 
 #else
+#ifdef __APPLE__
+#define CV_KEY_CODE_ENTER 13 
+#else
 #define CV_KEY_CODE_ENTER 10
+#endif // __APPLE__
 #endif // (CV_MAJOR_VERSION >= 4)
 #endif // _WIN32
 #endif // !CV_KEY_CODE_ENTER
