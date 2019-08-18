@@ -38,6 +38,10 @@ Created : 2018-08-07
 
 #ifdef __GNUC__
 // Disable some GCC warnings.
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#endif // (__GNUC__ >= 9)
 //#pragma GCC diagnostic ignored "-Wunused-parameter"
 //#pragma GCC diagnostic ignored "-Wunused-variable"
 //#pragma GCC diagnostic ignored "-Wunused-value"
@@ -175,6 +179,10 @@ namespace cv
 //#pragma GCC diagnostic warning "-Wunused-value"
 //#pragma GCC diagnostic warning "-Wunused-variable"
 //#pragma GCC diagnostic warning "-Wunused-parameter"
+//#if (__GNUC__ >= 9)
+//#pragma GCC diagnostic warning "-Wclass-memaccess"
+//#pragma GCC diagnostic warning "-Wdeprecated-copy"
+//#endif // (__GNUC__ >= 9)
 #endif // (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4))
 #endif // __GNUC__
 
