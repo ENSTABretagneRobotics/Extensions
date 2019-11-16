@@ -56,7 +56,7 @@ Created : 2018-08-07
 #endif // __GNUC__
 
 // OpenCV headers.
-#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV410)
+#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV412)
 // This header should only contain simple C code without dependencies on other headers...
 #include "opencv2/core/version.hpp"
 #else
@@ -69,7 +69,7 @@ Created : 2018-08-07
 #include "cvaux.h"
 #include "highgui.h"
 #endif // !DISABLE_OPENCV_VERSION
-#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV410)
+#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV412)
 
 #if (CV_MAJOR_VERSION >= 2)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
