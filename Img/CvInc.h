@@ -97,7 +97,7 @@ Created : 2018-08-07
 // The following headers do not build in C mode.
 #ifdef __cplusplus
 #if ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
-#include "opencv/cvaux.h"
+//#include "opencv/cvaux.h" // Not found on Ubuntu 12.04...?
 //#include "opencv/cxmisc.h"
 //#include "opencv/ml.h"
 #endif // ((CV_MAJOR_VERSION == 2) || (CV_MAJOR_VERSION == 3))
