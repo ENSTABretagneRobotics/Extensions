@@ -13,7 +13,124 @@ Created : 2009-03-27
 #ifndef CVPROC_H
 #define CVPROC_H
 
-#include "CvCore.h"
+#include "OSTime.h"
+#include "CvInc.h"
+
+#ifndef USE_OPENCV_HIGHGUI_CPP_API
+inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor)
+{
+	(*pColorid)++;
+	switch (*pColorid)
+	{
+	case 1:
+		*pColor = CV_RGB(0, 255, 128); // Medium green.
+		break;
+	case 2:
+		*pColor = CV_RGB(255, 128, 0); // Orange.
+		break;
+	case 3:
+		*pColor = CV_RGB(128, 0, 255); // Violet.
+		break;
+	case 4:
+		*pColor = CV_RGB(128, 255, 0); // Light green.
+		break;
+	case 5:
+		*pColor = CV_RGB(255, 0, 128); // Pink.
+		break;
+	case 6:
+		*pColor = CV_RGB(0, 128, 255); // Light blue.
+		break;
+	case 7:
+		*pColor = CV_RGB(0, 255, 0); // Green.
+		break;
+	case 8:
+		*pColor = CV_RGB(255, 0, 0); // Red.
+		break;
+	case 9:
+		*pColor = CV_RGB(0, 0, 255); // Blue.
+		break;
+	case 10:
+		*pColor = CV_RGB(255, 255, 0); // Yellow.
+		break;
+	case 11:
+		*pColor = CV_RGB(255, 0, 255); // Magenta.
+		break;
+	case 12:
+		*pColor = CV_RGB(0, 255, 255); // Cyan.
+		break;
+	case 13:
+		*pColor = CV_RGB(0, 0, 0); // Black.
+		break;
+	case 14:
+		*pColor = CV_RGB(128, 128, 128); // Grey.
+		break;
+	case 15:
+		*pColor = CV_RGB(255, 255, 255); // White.
+		break;
+	default:
+		*pColorid = 0;
+		*pColor = defaultcolor;
+		break;
+	}
+}
+#else
+inline void CvCycleColors(int* pColorid, cv::Scalar* pColor, cv::Scalar defaultcolor)
+{
+	(*pColorid)++;
+	switch (*pColorid)
+	{
+	case 1:
+		*pColor = CV_RGB(0, 255, 128); // Medium green.
+		break;
+	case 2:
+		*pColor = CV_RGB(255, 128, 0); // Orange.
+		break;
+	case 3:
+		*pColor = CV_RGB(128, 0, 255); // Violet.
+		break;
+	case 4:
+		*pColor = CV_RGB(128, 255, 0); // Light green.
+		break;
+	case 5:
+		*pColor = CV_RGB(255, 0, 128); // Pink.
+		break;
+	case 6:
+		*pColor = CV_RGB(0, 128, 255); // Light blue.
+		break;
+	case 7:
+		*pColor = CV_RGB(0, 255, 0); // Green.
+		break;
+	case 8:
+		*pColor = CV_RGB(255, 0, 0); // Red.
+		break;
+	case 9:
+		*pColor = CV_RGB(0, 0, 255); // Blue.
+		break;
+	case 10:
+		*pColor = CV_RGB(255, 255, 0); // Yellow.
+		break;
+	case 11:
+		*pColor = CV_RGB(255, 0, 255); // Magenta.
+		break;
+	case 12:
+		*pColor = CV_RGB(0, 255, 255); // Cyan.
+		break;
+	case 13:
+		*pColor = CV_RGB(0, 0, 0); // Black.
+		break;
+	case 14:
+		*pColor = CV_RGB(128, 128, 128); // Grey.
+		break;
+	case 15:
+		*pColor = CV_RGB(255, 255, 255); // White.
+		break;
+	default:
+		*pColorid = 0;
+		*pColor = defaultcolor;
+		break;
+	}
+}
+#endif // !USE_OPENCV_HIGHGUI_CPP_API
 
 inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 {
@@ -293,6 +410,7 @@ inline void CorrectImageBordersRawBGR(unsigned char* data, int width, int height
 	}
 }
 
+#ifndef USE_OPENCV_HIGHGUI_CPP_API
 /*
 Returns the estimated position and dimensions of an orange ball in a picture.
 
@@ -375,5 +493,6 @@ inline int orange_ball_detection(IplImage* pImg, int *X, int *Y, int *W, int *H)
 
 	return EXIT_SUCCESS;
 }
+#endif // !USE_OPENCV_HIGHGUI_CPP_API
 
 #endif // !CVPROC_H

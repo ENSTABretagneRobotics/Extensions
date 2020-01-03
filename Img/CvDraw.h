@@ -17,64 +17,8 @@ Created : 2009-03-27
 #ifndef CVDRAW_H
 #define CVDRAW_H
 
-#include "CvCore.h"
-
-inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor)
-{
-	(*pColorid)++;
-	switch (*pColorid)
-	{
-	case 1:
-		*pColor = CV_RGB(0, 255, 128); // Medium green.
-		break;
-	case 2:
-		*pColor = CV_RGB(255, 128, 0); // Orange.
-		break;
-	case 3:
-		*pColor = CV_RGB(128, 0, 255); // Violet.
-		break;
-	case 4:
-		*pColor = CV_RGB(128, 255, 0); // Light green.
-		break;
-	case 5:
-		*pColor = CV_RGB(255, 0, 128); // Pink.
-		break;
-	case 6:
-		*pColor = CV_RGB(0, 128, 255); // Light blue.
-		break;
-	case 7:
-		*pColor = CV_RGB(0, 255, 0); // Green.
-		break;
-	case 8:
-		*pColor = CV_RGB(255, 0, 0); // Red.
-		break;
-	case 9:
-		*pColor = CV_RGB(0, 0, 255); // Blue.
-		break;
-	case 10:
-		*pColor = CV_RGB(255, 255, 0); // Yellow.
-		break;
-	case 11:
-		*pColor = CV_RGB(255, 0, 255); // Magenta.
-		break;
-	case 12:
-		*pColor = CV_RGB(0, 255, 255); // Cyan.
-		break;
-	case 13:
-		*pColor = CV_RGB(0, 0, 0); // Black.
-		break;
-	case 14:
-		*pColor = CV_RGB(128, 128, 128); // Grey.
-		break;
-	case 15:
-		*pColor = CV_RGB(255, 255, 255); // White.
-		break;
-	default:
-		*pColorid = 0;
-		*pColor = defaultcolor;
-		break;
-	}
-}
+#include "OSTime.h"
+#include "CvInc.h"
 
 /*
 Clear an IplImage (set all the pixels to the same color). 

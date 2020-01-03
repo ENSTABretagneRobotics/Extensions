@@ -71,6 +71,18 @@ Created : 2018-08-07
 #endif // !DISABLE_OPENCV_VERSION
 #endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV412)
 
+// Temporary workaround because many conversions from C to C++ types are disabled by default after OpenCV 4.2.0...
+#if (CV_MAJOR_VERSION >= 4)
+#if (CV_MINOR_VERSION >= 2)
+#ifndef CV__ENABLE_C_API_CTORS
+#define CV__ENABLE_C_API_CTORS
+#endif // !CV__ENABLE_C_API_CTORS
+#ifndef CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#define CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#endif // !CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#endif // (CV_MINOR_VERSION >= 2)
+#endif // (CV_MAJOR_VERSION >= 4)
+
 #if (CV_MAJOR_VERSION >= 2)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
 // After OpenCV 3.2.0, C mode will probably not build any more due to several problems in core OpenCV headers...
@@ -159,6 +171,11 @@ namespace cv
 #endif // (CV_MAJOR_VERSION >= 4)
 #endif // _WIN32
 #endif // !CV_KEY_CODE_ENTER
+
+// CV_RGB does not always work with CvScalar after OpenCV 4.2.0...
+#ifndef CV_RGB_CvScalar
+#define CV_RGB_CvScalar(r, g, b) cvScalar((b), (g), (r), 0)
+#endif // !CV_RGB_CvScalar
 
 #if (CV_MAJOR_VERSION >= 4)
 #ifndef USE_OPENCV_HIGHGUI_CPP_API
