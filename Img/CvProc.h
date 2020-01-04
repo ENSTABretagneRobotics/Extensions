@@ -323,7 +323,11 @@ inline int CopyResizeScaleMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnRes
 			m[4] = cos(angle)/vscale;
 			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
 			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+#if (CV_MAJOR_VERSION < 3)
+			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+CV_WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+#else
 			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+cv::WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+#endif // (CV_MAJOR_VERSION < 3)
 
 			warpedimg.copyTo(destimg);
 		}
@@ -489,7 +493,11 @@ inline int CopyResizeScaleOverlayMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCr
 			m[4] = cos(angle)/vscale;
 			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
 			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+#if (CV_MAJOR_VERSION < 3)
+			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+CV_WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+#else
 			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+cv::WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+#endif // (CV_MAJOR_VERSION < 3)
 
 			CopyOverlayMat(warpedimg, destimg);
 		}
