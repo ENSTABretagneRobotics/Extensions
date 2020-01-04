@@ -16,56 +16,55 @@ Created : 2009-03-27
 #include "OSTime.h"
 #include "CvInc.h"
 
-#ifndef USE_OPENCV_HIGHGUI_CPP_API
 inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor)
 {
 	(*pColorid)++;
 	switch (*pColorid)
 	{
 	case 1:
-		*pColor = CV_RGB(0, 255, 128); // Medium green.
+		*pColor = CV_RGB_CvScalar(0, 255, 128); // Medium green.
 		break;
 	case 2:
-		*pColor = CV_RGB(255, 128, 0); // Orange.
+		*pColor = CV_RGB_CvScalar(255, 128, 0); // Orange.
 		break;
 	case 3:
-		*pColor = CV_RGB(128, 0, 255); // Violet.
+		*pColor = CV_RGB_CvScalar(128, 0, 255); // Violet.
 		break;
 	case 4:
-		*pColor = CV_RGB(128, 255, 0); // Light green.
+		*pColor = CV_RGB_CvScalar(128, 255, 0); // Light green.
 		break;
 	case 5:
-		*pColor = CV_RGB(255, 0, 128); // Pink.
+		*pColor = CV_RGB_CvScalar(255, 0, 128); // Pink.
 		break;
 	case 6:
-		*pColor = CV_RGB(0, 128, 255); // Light blue.
+		*pColor = CV_RGB_CvScalar(0, 128, 255); // Light blue.
 		break;
 	case 7:
-		*pColor = CV_RGB(0, 255, 0); // Green.
+		*pColor = CV_RGB_CvScalar(0, 255, 0); // Green.
 		break;
 	case 8:
-		*pColor = CV_RGB(255, 0, 0); // Red.
+		*pColor = CV_RGB_CvScalar(255, 0, 0); // Red.
 		break;
 	case 9:
-		*pColor = CV_RGB(0, 0, 255); // Blue.
+		*pColor = CV_RGB_CvScalar(0, 0, 255); // Blue.
 		break;
 	case 10:
-		*pColor = CV_RGB(255, 255, 0); // Yellow.
+		*pColor = CV_RGB_CvScalar(255, 255, 0); // Yellow.
 		break;
 	case 11:
-		*pColor = CV_RGB(255, 0, 255); // Magenta.
+		*pColor = CV_RGB_CvScalar(255, 0, 255); // Magenta.
 		break;
 	case 12:
-		*pColor = CV_RGB(0, 255, 255); // Cyan.
+		*pColor = CV_RGB_CvScalar(0, 255, 255); // Cyan.
 		break;
 	case 13:
-		*pColor = CV_RGB(0, 0, 0); // Black.
+		*pColor = CV_RGB_CvScalar(0, 0, 0); // Black.
 		break;
 	case 14:
-		*pColor = CV_RGB(128, 128, 128); // Grey.
+		*pColor = CV_RGB_CvScalar(128, 128, 128); // Grey.
 		break;
 	case 15:
-		*pColor = CV_RGB(255, 255, 255); // White.
+		*pColor = CV_RGB_CvScalar(255, 255, 255); // White.
 		break;
 	default:
 		*pColorid = 0;
@@ -73,64 +72,63 @@ inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor
 		break;
 	}
 }
-#else
-inline void CvCycleColors(int* pColorid, cv::Scalar* pColor, cv::Scalar defaultcolor)
+
+inline void CycleColorsMat(int& colorid, cv::Scalar& color, cv::Scalar defaultcolor)
 {
-	(*pColorid)++;
-	switch (*pColorid)
+	(colorid)++;
+	switch (colorid)
 	{
 	case 1:
-		*pColor = CV_RGB(0, 255, 128); // Medium green.
+		color = CV_RGB(0, 255, 128); // Medium green.
 		break;
 	case 2:
-		*pColor = CV_RGB(255, 128, 0); // Orange.
+		color = CV_RGB(255, 128, 0); // Orange.
 		break;
 	case 3:
-		*pColor = CV_RGB(128, 0, 255); // Violet.
+		color = CV_RGB(128, 0, 255); // Violet.
 		break;
 	case 4:
-		*pColor = CV_RGB(128, 255, 0); // Light green.
+		color = CV_RGB(128, 255, 0); // Light green.
 		break;
 	case 5:
-		*pColor = CV_RGB(255, 0, 128); // Pink.
+		color = CV_RGB(255, 0, 128); // Pink.
 		break;
 	case 6:
-		*pColor = CV_RGB(0, 128, 255); // Light blue.
+		color = CV_RGB(0, 128, 255); // Light blue.
 		break;
 	case 7:
-		*pColor = CV_RGB(0, 255, 0); // Green.
+		color = CV_RGB(0, 255, 0); // Green.
 		break;
 	case 8:
-		*pColor = CV_RGB(255, 0, 0); // Red.
+		color = CV_RGB(255, 0, 0); // Red.
 		break;
 	case 9:
-		*pColor = CV_RGB(0, 0, 255); // Blue.
+		color = CV_RGB(0, 0, 255); // Blue.
 		break;
 	case 10:
-		*pColor = CV_RGB(255, 255, 0); // Yellow.
+		color = CV_RGB(255, 255, 0); // Yellow.
 		break;
 	case 11:
-		*pColor = CV_RGB(255, 0, 255); // Magenta.
+		color = CV_RGB(255, 0, 255); // Magenta.
 		break;
 	case 12:
-		*pColor = CV_RGB(0, 255, 255); // Cyan.
+		color = CV_RGB(0, 255, 255); // Cyan.
 		break;
 	case 13:
-		*pColor = CV_RGB(0, 0, 0); // Black.
+		color = CV_RGB(0, 0, 0); // Black.
 		break;
 	case 14:
-		*pColor = CV_RGB(128, 128, 128); // Grey.
+		color = CV_RGB(128, 128, 128); // Grey.
 		break;
 	case 15:
-		*pColor = CV_RGB(255, 255, 255); // White.
+		color = CV_RGB(255, 255, 255); // White.
 		break;
 	default:
-		*pColorid = 0;
-		*pColor = defaultcolor;
+		colorid = 0;
+		color = defaultcolor;
 		break;
 	}
 }
-#endif // !USE_OPENCV_HIGHGUI_CPP_API
 
 inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 {
@@ -143,6 +141,24 @@ inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 			destimg->imageData[i] = overlayimg->imageData[i];
 			destimg->imageData[i+1] = overlayimg->imageData[i+1];
 			destimg->imageData[i+2] = overlayimg->imageData[i+2];
+		}
+		i -= 3;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+inline int CopyOverlayMat(cv::Mat& overlayimg, cv::Mat& destimg)
+{
+	int i = overlayimg.total()-3;
+
+	while (i >= 0)
+	{
+		if (overlayimg.data[i]||overlayimg.data[i+1]||overlayimg.data[i+2])
+		{
+			destimg.data[i] = overlayimg.data[i];
+			destimg.data[i+1] = overlayimg.data[i+1];
+			destimg.data[i+2] = overlayimg.data[i+2];
 		}
 		i -= 3;
 	}
@@ -239,6 +255,83 @@ inline int CopyResizeScale(IplImage* srcimg, IplImage* destimg, BOOL bCropOnResi
 	return EXIT_SUCCESS;
 }
 
+inline int CopyResizeScaleMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnResize)
+{
+	double m[6];
+	cv::Mat M = cv::Mat(2, 3, CV_64F, m);
+	double ratio = 1, hscale = 1, vscale = 1, hcenter = 0, vcenter = 0, hshift = 0, vshift = 0, angle = 0;
+
+	if ((srcimg.cols == destimg.cols)&&(srcimg.rows == destimg.rows))
+	{
+		srcimg.copyTo(destimg);
+	}
+	else
+	{
+		// Missing exception handling...
+		cv::Mat resizedimg = cv::Mat(cv::Size(destimg.cols, destimg.rows), destimg.type());
+
+		cv::resize(srcimg, resizedimg, resizedimg.size());
+
+		ratio = (double)srcimg.cols*(double)resizedimg.rows/((double)srcimg.rows*(double)resizedimg.cols);
+
+		if (bCropOnResize)
+		{
+			if (ratio >= 1)
+			{
+				hscale = ratio;
+				vscale = 1;
+			}
+			else
+			{
+				hscale = 1;
+				vscale = ratio;
+			}
+		}
+		else
+		{
+			if (ratio >= 1)
+			{
+				hscale = 1;
+				vscale = 1/ratio;
+			}
+			else
+			{
+				hscale = 1/ratio;
+				vscale = 1;
+			}
+		}
+
+		if ((hscale == 1)&&(vscale == 1))
+		{
+			resizedimg.copyTo(destimg);
+		}
+		else
+		{
+			// Missing exception handling...
+			cv::Mat warpedimg = cv::Mat(cv::Size(destimg.cols, destimg.rows), destimg.type());
+
+			// Create a map_matrix, where the left 2x2 matrix is the transform and the right 2x1 is the dimensions.
+
+			hcenter = resizedimg.cols*0.5+hcenter;
+			vcenter = resizedimg.rows*0.5+vcenter;
+			hshift = resizedimg.cols*0.5+hshift;
+			vshift = resizedimg.rows*0.5+vshift;
+
+			m[0] = cos(angle)/hscale;
+			m[1] = sin(angle)/hscale;
+			m[3] = -sin(angle)/vscale;
+			m[4] = cos(angle)/vscale;
+			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
+			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+cv::WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+
+			warpedimg.copyTo(destimg);
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
 inline int CopyResizeScaleOverlay(IplImage* overlayimg, IplImage* destimg, BOOL bCropOnResize)
 {
 	IplImage* resizedimg = NULL;
@@ -322,6 +415,83 @@ inline int CopyResizeScaleOverlay(IplImage* overlayimg, IplImage* destimg, BOOL 
 			cvReleaseImage(&resizedimg);
 			CopyOverlay(warpedimg, destimg);
 			cvReleaseImage(&warpedimg);
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
+inline int CopyResizeScaleOverlayMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnResize)
+{
+	double m[6];
+	cv::Mat M = cv::Mat(2, 3, CV_64F, m);
+	double ratio = 1, hscale = 1, vscale = 1, hcenter = 0, vcenter = 0, hshift = 0, vshift = 0, angle = 0;
+
+	if ((srcimg.cols == destimg.cols)&&(srcimg.rows == destimg.rows))
+	{
+		CopyOverlayMat(srcimg, destimg);
+	}
+	else
+	{
+		// Missing exception handling...
+		cv::Mat resizedimg = cv::Mat(cv::Size(destimg.cols, destimg.rows), destimg.type());
+
+		cv::resize(srcimg, resizedimg, resizedimg.size());
+
+		ratio = (double)srcimg.cols*(double)resizedimg.rows/((double)srcimg.rows*(double)resizedimg.cols);
+
+		if (bCropOnResize)
+		{
+			if (ratio >= 1)
+			{
+				hscale = ratio;
+				vscale = 1;
+			}
+			else
+			{
+				hscale = 1;
+				vscale = ratio;
+			}
+		}
+		else
+		{
+			if (ratio >= 1)
+			{
+				hscale = 1;
+				vscale = 1/ratio;
+			}
+			else
+			{
+				hscale = 1/ratio;
+				vscale = 1;
+			}
+		}
+
+		if ((hscale == 1)&&(vscale == 1))
+		{
+			CopyOverlayMat(resizedimg, destimg);
+		}
+		else
+		{
+			// Missing exception handling...
+			cv::Mat warpedimg = cv::Mat(cv::Size(destimg.cols, destimg.rows), destimg.type());
+
+			// Create a map_matrix, where the left 2x2 matrix is the transform and the right 2x1 is the dimensions.
+
+			hcenter = resizedimg.cols*0.5+hcenter;
+			vcenter = resizedimg.rows*0.5+vcenter;
+			hshift = resizedimg.cols*0.5+hshift;
+			vshift = resizedimg.rows*0.5+vshift;
+
+			m[0] = cos(angle)/hscale;
+			m[1] = sin(angle)/hscale;
+			m[3] = -sin(angle)/vscale;
+			m[4] = cos(angle)/vscale;
+			m[2] = (1-cos(angle)/hscale)*hshift-(sin(angle)/hscale)*vshift+hcenter-hshift;
+			m[5] = (sin(angle)/vscale)*hshift+(1-cos(angle)/vscale)*vshift+vcenter-vshift;
+			cv::warpAffine(resizedimg, warpedimg, M, warpedimg.size(), cv::INTER_LINEAR+cv::WARP_FILL_OUTLIERS+cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
+
+			CopyOverlayMat(warpedimg, destimg);
 		}
 	}
 
