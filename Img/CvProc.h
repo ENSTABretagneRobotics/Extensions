@@ -73,6 +73,7 @@ inline void CvCycleColors(int* pColorid, CvScalar* pColor, CvScalar defaultcolor
 	}
 }
 
+#ifdef __cplusplus
 inline void CycleColorsMat(int& colorid, cv::Scalar& color, cv::Scalar defaultcolor)
 {
 	(colorid)++;
@@ -129,6 +130,7 @@ inline void CycleColorsMat(int& colorid, cv::Scalar& color, cv::Scalar defaultco
 		break;
 	}
 }
+#endif // __cplusplus
 
 inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 {
@@ -148,6 +150,7 @@ inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 	return EXIT_SUCCESS;
 }
 
+#ifdef __cplusplus
 inline int CopyOverlayMat(cv::Mat& overlayimg, cv::Mat& destimg)
 {
 	int i = overlayimg.total()-3;
@@ -165,6 +168,7 @@ inline int CopyOverlayMat(cv::Mat& overlayimg, cv::Mat& destimg)
 
 	return EXIT_SUCCESS;
 }
+#endif // __cplusplus
 
 inline int CopyResizeScale(IplImage* srcimg, IplImage* destimg, BOOL bCropOnResize)
 {
@@ -255,6 +259,7 @@ inline int CopyResizeScale(IplImage* srcimg, IplImage* destimg, BOOL bCropOnResi
 	return EXIT_SUCCESS;
 }
 
+#ifdef __cplusplus
 inline int CopyResizeScaleMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnResize)
 {
 	double m[6];
@@ -335,6 +340,7 @@ inline int CopyResizeScaleMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnRes
 
 	return EXIT_SUCCESS;
 }
+#endif // __cplusplus
 
 inline int CopyResizeScaleOverlay(IplImage* overlayimg, IplImage* destimg, BOOL bCropOnResize)
 {
@@ -425,6 +431,7 @@ inline int CopyResizeScaleOverlay(IplImage* overlayimg, IplImage* destimg, BOOL 
 	return EXIT_SUCCESS;
 }
 
+#ifdef __cplusplus
 inline int CopyResizeScaleOverlayMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCropOnResize)
 {
 	double m[6];
@@ -505,6 +512,7 @@ inline int CopyResizeScaleOverlayMat(cv::Mat& srcimg, cv::Mat& destimg, bool bCr
 
 	return EXIT_SUCCESS;
 }
+#endif // __cplusplus
 
 inline void CorrectImageBorders(IplImage* image, int nbpixborder, unsigned char r0, unsigned char g0, unsigned char b0)
 {
@@ -588,7 +596,6 @@ inline void CorrectImageBordersRawBGR(unsigned char* data, int width, int height
 	}
 }
 
-#ifndef USE_OPENCV_HIGHGUI_CPP_API
 /*
 Returns the estimated position and dimensions of an orange ball in a picture.
 
@@ -671,6 +678,5 @@ inline int orange_ball_detection(IplImage* pImg, int *X, int *Y, int *W, int *H)
 
 	return EXIT_SUCCESS;
 }
-#endif // !USE_OPENCV_HIGHGUI_CPP_API
 
 #endif // !CVPROC_H

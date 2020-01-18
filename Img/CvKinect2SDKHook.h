@@ -159,16 +159,16 @@ inline void _ProcessIncomingDepthDataKinect2SDK(KINECT* pKinect)
 					//double scale = -255.0/(nDepthMaxReliableDistance-nDepthMinReliableDistance);
 					double scale = -255.0/8000.0;
 					depthMap.convertTo(img0, CV_8UC1, scale, 255.0);
-					threshold(img0, img0_threshold, 254, 255, CV_THRESH_BINARY_INV);
-					bitwise_and(img0, img0_threshold, img0);
+					cv::threshold(img0, img0_threshold, 254, 255, CV_THRESH_BINARY_INV);
+					cv::bitwise_and(img0, img0_threshold, img0);
 
 					////double scale = 255.0/(nDepthMaxReliableDistance-nDepthMinReliableDistance);
 					//double scale = 255.0/8000.0;
 					//depthMap.convertTo(img0, CV_8UC1, scale, 0);
-					//threshold(img0, img0_threshold, 254, 255, CV_THRESH_BINARY_INV);
-					//bitwise_and(img0, img0_threshold, img0);
+					//cv::threshold(img0, img0_threshold, 254, 255, CV_THRESH_BINARY_INV);
+					//cv::bitwise_and(img0, img0_threshold, img0);
 
-					//applyColorMap(img0, img0, cv::COLORMAP_JET);
+					//cv::applyColorMap(img0, img0, cv::COLORMAP_JET);
 
 					IplImage im = img0;
 					cvCvtColor(&im, pKinect->depthimg, CV_GRAY2BGR);
@@ -206,7 +206,7 @@ inline void _ProcessIncomingInfraredDataKinect2SDK(KINECT* pKinect)
 					infraredMap.convertTo(img0_gamma, CV_64FC1, scale);
 					pow(img0_gamma, gamma, img0_gamma);
 					img0_gamma.convertTo(img0, CV_8UC1, gain*255.0);
-					//applyColorMap(img0, img0, cv::COLORMAP_BONE);
+					//cv::applyColorMap(img0, img0, cv::COLORMAP_BONE);
 					IplImage im = img0;
 					cvCvtColor(&im, pKinect->infraredimg, CV_GRAY2BGR);
 				}
