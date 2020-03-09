@@ -56,10 +56,6 @@ Created : 2018-08-07
 #endif // __GNUC__
 
 // OpenCV headers.
-#if defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV412)
-// This header should only contain simple C code without dependencies on other headers...
-#include "opencv2/core/version.hpp"
-#else
 #ifndef DISABLE_OPENCV_VERSION
 // This header should only contain simple C code without dependencies on other headers...
 #include "opencv2/core/version.hpp"
@@ -69,7 +65,6 @@ Created : 2018-08-07
 #include "cvaux.h"
 #include "highgui.h"
 #endif // !DISABLE_OPENCV_VERSION
-#endif // defined(OPENCV249) || defined(OPENCV2413) || defined(OPENCV320) || defined(OPENCV342) || defined(OPENCV412)
 
 // Temporary workaround because many conversions from C to C++ types are disabled by default after OpenCV 4.2.0...
 #if (CV_MAJOR_VERSION >= 4)
