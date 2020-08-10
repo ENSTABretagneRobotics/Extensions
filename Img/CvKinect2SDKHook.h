@@ -21,6 +21,18 @@
 
 #include "opencv2/core/version.hpp"
 
+// Temporary workaround because many conversions from C to C++ types are disabled by default after OpenCV 4.2.0...
+#if (CV_MAJOR_VERSION >= 4)
+#if (CV_MINOR_VERSION >= 2)
+#ifndef CV__ENABLE_C_API_CTORS
+#define CV__ENABLE_C_API_CTORS
+#endif // !CV__ENABLE_C_API_CTORS
+#ifndef CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#define CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#endif // !CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
+#endif // (CV_MINOR_VERSION >= 2)
+#endif // (CV_MAJOR_VERSION >= 4)
+
 #include "opencv2/core/core_c.h"
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/highgui/highgui_c.h"
@@ -224,7 +236,7 @@ inline CvCapture* cvCreateFileCaptureKinect2SDK(const char* filename)
 	KINECT* pKinect = NULL;
 	HRESULT hr = E_FAIL;
 
-	if (strncmp(filename, "Kinect2", strlen("Kinect2")) == 0)
+	if ((strncmp(filename, "Kinect2Color", strlen("Kinect2Color")) == 0)||(strncmp(filename, "Kinect2Depth", strlen("Kinect2Depth")) == 0)||(strncmp(filename, "Kinect2Infrared", strlen("Kinect2Infrared")) == 0))
 	{
 		// Code common to all Kinect 2 sources.
 		pKinect = (KINECT*)calloc(1, sizeof(KINECT));
