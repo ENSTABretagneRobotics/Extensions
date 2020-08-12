@@ -67,6 +67,7 @@ Created : 2018-08-07
 #endif // !DISABLE_OPENCV_VERSION
 
 // Temporary workaround because many conversions from C to C++ types are disabled by default after OpenCV 4.2.0...
+#ifndef DISABLE_OPENCV_C_API_CTORS
 #if (CV_MAJOR_VERSION >= 4)
 #if (CV_MINOR_VERSION >= 2)
 #ifndef CV__ENABLE_C_API_CTORS
@@ -77,6 +78,7 @@ Created : 2018-08-07
 #endif // !CV__SKIP_MESSAGE_MALFORMED_C_API_CTORS
 #endif // (CV_MINOR_VERSION >= 2)
 #endif // (CV_MAJOR_VERSION >= 4)
+#endif // !DISABLE_OPENCV_C_API_CTORS
 
 #if (CV_MAJOR_VERSION >= 2)
 // To try to solve cvRound() undefined problem in C mode in OpenCV 3.1.0...
@@ -148,7 +150,7 @@ namespace cv
 }
 #endif // (CV_MAJOR_VERSION < 3)
 #endif // __cplusplus
-#endif // DISABLE_OPENCV_COMPAT_MACROS
+#endif // !DISABLE_OPENCV_COMPAT_MACROS
 
 // The ENTER key code seems to vary depending on OpenCV versions...
 #ifndef CV_KEY_CODE_ENTER
