@@ -303,6 +303,7 @@ typedef enum _KinectEngagementMode KinectEngagementMode;
 
 // Some macros might be missing depending on OpenCV versions...
 #ifndef DISABLE_OPENCV_COMPAT_MACROS
+#define DISABLE_OPENCV_COMPAT_MACROS // Needed to avoid redefinition errors...
 #ifdef __cplusplus
 #if (CV_MAJOR_VERSION < 3)
 namespace cv
