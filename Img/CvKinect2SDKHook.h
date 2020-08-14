@@ -333,6 +333,30 @@ namespace cv
 #define KINECT_INFRARED_IMAGE_WIDTH 512
 #define KINECT_INFRARED_IMAGE_HEIGHT 424
 
+#ifdef USE_LIBFREENECT2
+// From https://stackoverflow.com/questions/18860895/how-to-initialize-static-members-in-the-header...
+template<class Freenect2_dummy>
+
+struct Freenect2_statics
+{
+	static libfreenect2::Freenect2* freenect2;
+	static libfreenect2::PacketPipeline* pipeline;
+	static libfreenect2::Freenect2Device* dev;
+	static libfreenect2::SyncMultiFrameListener* listener;
+	static int refcount;
+};
+
+template<class Freenect2_dummy> libfreenect2::Freenect2* Freenect2_statics<Freenect2_dummy>::freenect2 = NULL;
+template<class Freenect2_dummy> libfreenect2::PacketPipeline* Freenect2_statics<Freenect2_dummy>::pipeline = NULL;
+template<class Freenect2_dummy> libfreenect2::Freenect2Device* Freenect2_statics<Freenect2_dummy>::dev = NULL;
+template<class Freenect2_dummy> libfreenect2::SyncMultiFrameListener* Freenect2_statics<Freenect2_dummy>::listener = NULL;
+template<class Freenect2_dummy> int Freenect2_statics<Freenect2_dummy>::refcount = 0;
+
+class Freenect2_globals
+	: public Freenect2_statics<void>
+{};
+#endif // USE_LIBFREENECT2
+
 // Should not put class inside, only simple types, C struct or pointers...?
 //class KINECT
 struct KINECT
@@ -344,20 +368,15 @@ struct KINECT
 	IColorFrameReader* colorFrameReader;
 	IDepthFrameReader* depthFrameReader;
 	IInfraredFrameReader* infraredFrameReader;
-#else	
-	libfreenect2::Freenect2* freenect2;
-	libfreenect2::PacketPipeline* pipeline;
-	libfreenect2::Freenect2Device* dev;
-	libfreenect2::SyncMultiFrameListener* listener;
-#endif // USE_LIBFREENECT2
+#endif // !USE_LIBFREENECT2
+	cv::Mat* pcolorimgmat;
+	cv::Mat* pdepthimgmat;
+	cv::Mat* pinfraredimgmat;
 #if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
 	IplImage* colorimg;
 	IplImage* depthimg;
 	IplImage* infraredimg;
 #endif // ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-	cv::Mat* pcolorimgmat;
-	cv::Mat* pdepthimgmat;
-	cv::Mat* pinfraredimgmat;
 };
 typedef struct KINECT KINECT;
 
@@ -762,14 +781,18 @@ inline void __ReleaseKinect2SDK(KINECT** ppKinect)
 
 inline void _ReleaseKinect2(KINECT** ppKinect)
 {
-	if ((*ppKinect)->dev)
+	Freenect2_globals::refcount--;
+	if (Freenect2_globals::refcount <= 0)
 	{
-		(*ppKinect)->dev->stop();
-		(*ppKinect)->dev->close();
-		if ((*ppKinect)->listener) delete (*ppKinect)->listener; // Cause problem if done before dev->stop()...?
+		if (Freenect2_globals::dev)
+		{
+			Freenect2_globals::dev->stop();
+			Freenect2_globals::dev->close();
+			if (Freenect2_globals::listener) delete Freenect2_globals::listener; // Cause problem if done before dev->stop()...?
+		}
+		//if (Freenect2_globals::pipeline) delete Freenect2_globals::pipeline; // Cause problem, might be destroyed automatically by freenect2...?
+		if (Freenect2_globals::freenect2) delete Freenect2_globals::freenect2;
 	}
-	//if ((*ppKinect)->pipeline) delete (*ppKinect)->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-	if ((*ppKinect)->freenect2) delete (*ppKinect)->freenect2;
 	__ReleaseKinect2SDK(ppKinect);
 }
 
@@ -777,7 +800,6 @@ inline KINECT* _InitKinect2(const char* filename)
 {
 	KINECT* pKinect = NULL;
 
-	// Code common to all Kinect v2 sources.
 	//pKinect = (KINECT*)calloc(1, sizeof(KINECT));
 	pKinect = new KINECT();
 	if (!pKinect)
@@ -786,10 +808,6 @@ inline KINECT* _InitKinect2(const char* filename)
 		return NULL;
 	}
 	pKinect->type = 0;
-	pKinect->freenect2 = NULL;
-	pKinect->pipeline = NULL;
-	pKinect->dev = NULL;
-	pKinect->listener = NULL;
 #if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
 	pKinect->colorimg = NULL;
 	pKinect->depthimg = NULL;
@@ -798,151 +816,123 @@ inline KINECT* _InitKinect2(const char* filename)
 	pKinect->pcolorimgmat = NULL;
 	pKinect->pdepthimgmat = NULL;
 	pKinect->pinfraredimgmat = NULL;
-	libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Error));
-	pKinect->freenect2 = new libfreenect2::Freenect2();
-	if (!pKinect->freenect2)
+	Freenect2_globals::refcount++;
+	if (Freenect2_globals::refcount <= 1)
 	{
-		printf("Freenect2() failed.\n");
-		__ReleaseKinect2SDK(&pKinect);
-		return NULL;
-	}
-	if (pKinect->freenect2->enumerateDevices() == 0)
-	{
-		printf("enumerateDevices() failed.\n");
-		delete pKinect->freenect2;
-		__ReleaseKinect2SDK(&pKinect);
-		return NULL;
-	}
-#if defined(LIBFREENECT2_WITH_CUDA_SUPPORT)
-	pKinect->pipeline = new libfreenect2::CudaPacketPipeline();
-#elif defined(LIBFREENECT2_WITH_OPENGL_SUPPORT)
-	pKinect->pipeline = new libfreenect2::OpenGLPacketPipeline();
-#elif defined(LIBFREENECT2_WITH_OPENCL_SUPPORT)
-	pKinect->pipeline = new libfreenect2::OpenCLPacketPipeline();
-#else
-	pKinect->pipeline = new libfreenect2::CpuPacketPipeline();
-#endif
-	if (!pKinect->pipeline)
-	{
-		printf("PacketPipeline() failed.\n");
-		delete pKinect->freenect2;
-		__ReleaseKinect2SDK(&pKinect);
-		return NULL;
-	}
-	//std::string serial = pKinect->freenect2->getDefaultDeviceSerialNumber();
-	//pKinect->dev = pKinect->freenect2->openDevice(serial, pipeline);
-	pKinect->dev = pKinect->freenect2->openDefaultDevice(pKinect->pipeline);
-	if (!pKinect->dev)
-	{
-		printf("openDevice() failed.\n");
-		//delete pKinect->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-		delete pKinect->freenect2;
-		__ReleaseKinect2SDK(&pKinect);
-		return NULL;
-	}
-	if (strncmp(filename, "Kinect2Color", strlen("Kinect2Color")) == 0)
-	{
-		pKinect->listener = new libfreenect2::SyncMultiFrameListener(libfreenect2::Frame::Color);
-		pKinect->dev->setColorFrameListener(pKinect->listener);
-		if (!pKinect->dev->startStreams(true, false))
+		libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Error));
+		Freenect2_globals::freenect2 = new libfreenect2::Freenect2();
+		if (!Freenect2_globals::freenect2)
 		{
-			printf("startStreams() failed.\n");
-			pKinect->dev->close();
-			//delete pKinect->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-			delete pKinect->freenect2;
+			printf("Freenect2() failed.\n");
+			Freenect2_globals::refcount--;
 			__ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
-		pKinect->pcolorimgmat = new cv::Mat(cv::Size(KINECT_COLOR_IMAGE_WIDTH,KINECT_COLOR_IMAGE_HEIGHT), CV_8UC3, 0.0);
-		if ((!pKinect->pcolorimgmat)||(pKinect->pcolorimgmat->empty()))
+		if (Freenect2_globals::freenect2->enumerateDevices() == 0)
 		{
-			printf("cv::Mat::zeros() failed.\n");
-			_ReleaseKinect2(&pKinect);
-			return NULL;
-		}
-#if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->colorimg = cvCreateImage(cvSize(KINECT_COLOR_IMAGE_WIDTH,KINECT_COLOR_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
-		if (!pKinect->colorimg)
-		{
-			printf("cvCreateImage() failed.\n");
-			_ReleaseKinect2(&pKinect);
-			return NULL;
-		}
-		*pKinect->colorimg = *pKinect->pcolorimgmat;
-#endif // ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->type = KINECT_TYPE_COLOR;
-	}
-	else if (strncmp(filename, "Kinect2Depth", strlen("Kinect2Depth")) == 0)
-	{
-		pKinect->listener = new libfreenect2::SyncMultiFrameListener(libfreenect2::Frame::Depth|libfreenect2::Frame::Ir);
-		pKinect->dev->setIrAndDepthFrameListener(pKinect->listener);
-		if (!pKinect->dev->startStreams(false, true))
-		{
-			printf("startStreams() failed.\n");
-			pKinect->dev->close();
-			//delete pKinect->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-			delete pKinect->freenect2;
+			printf("enumerateDevices() failed.\n");
+			delete Freenect2_globals::freenect2;
+			Freenect2_globals::refcount--;
 			__ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
-		pKinect->pdepthimgmat = new cv::Mat(cv::Size(KINECT_INFRARED_IMAGE_WIDTH,KINECT_INFRARED_IMAGE_HEIGHT), CV_8UC3, 0.0);
-		if ((!pKinect->pdepthimgmat)||(pKinect->pdepthimgmat->empty()))
+	#if defined(LIBFREENECT2_WITH_CUDA_SUPPORT)
+		Freenect2_globals::pipeline = new libfreenect2::CudaPacketPipeline();
+	#elif defined(LIBFREENECT2_WITH_OPENGL_SUPPORT)
+		Freenect2_globals::pipeline = new libfreenect2::OpenGLPacketPipeline();
+	#elif defined(LIBFREENECT2_WITH_OPENCL_SUPPORT)
+		Freenect2_globals::pipeline = new libfreenect2::OpenCLPacketPipeline();
+	#else
+		Freenect2_globals::pipeline = new libfreenect2::CpuPacketPipeline();
+	#endif
+		if (!Freenect2_globals::pipeline)
 		{
-			printf("cv::Mat::zeros() failed.\n");
-			_ReleaseKinect2(&pKinect);
-			return NULL;
-		}
-#if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->depthimg = cvCreateImage(cvSize(KINECT_INFRARED_IMAGE_WIDTH,KINECT_INFRARED_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
-		if (!pKinect->depthimg)
-		{
-			printf("cvCreateImage() failed.\n");
-			_ReleaseKinect2(&pKinect);
-			return NULL;
-		}
-		*pKinect->depthimg = *pKinect->pdepthimgmat;
-#endif // ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->type = KINECT_TYPE_DEPTH;
-	}
-	else if (strncmp(filename, "Kinect2Infrared", strlen("Kinect2Infrared")) == 0)
-	{
-		pKinect->listener = new libfreenect2::SyncMultiFrameListener(libfreenect2::Frame::Depth|libfreenect2::Frame::Ir);
-		pKinect->dev->setIrAndDepthFrameListener(pKinect->listener);
-		if (!pKinect->dev->startStreams(false, true))
-		{
-			printf("startStreams() failed.\n");
-			pKinect->dev->close();
-			//delete pKinect->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-			delete pKinect->freenect2;
+			printf("PacketPipeline() failed.\n");
+			delete Freenect2_globals::freenect2;
+			Freenect2_globals::refcount--;
 			__ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
-		pKinect->pinfraredimgmat = new cv::Mat(cv::Size(KINECT_INFRARED_IMAGE_WIDTH,KINECT_INFRARED_IMAGE_HEIGHT), CV_8UC3, 0.0);
-		if ((!pKinect->pinfraredimgmat)||(pKinect->pinfraredimgmat->empty()))
+		//std::string serial = Freenect2_globals::freenect2->getDefaultDeviceSerialNumber();
+		//Freenect2_globals::dev = Freenect2_globals::freenect2->openDevice(serial, Freenect2_globals::pipeline);
+		Freenect2_globals::dev = Freenect2_globals::freenect2->openDefaultDevice(Freenect2_globals::pipeline);
+		if (!Freenect2_globals::dev)
 		{
-			printf("cv::Mat::zeros() failed.\n");
-			_ReleaseKinect2(&pKinect);
+			printf("openDevice() failed.\n");
+			//delete Freenect2_globals::pipeline; // Cause problem, might be destroyed automatically by freenect2...?
+			delete Freenect2_globals::freenect2;
+			Freenect2_globals::refcount--;
+			__ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
-#if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->infraredimg = cvCreateImage(cvSize(KINECT_INFRARED_IMAGE_WIDTH,KINECT_INFRARED_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
-		if (!pKinect->infraredimg)
+		Freenect2_globals::listener = new libfreenect2::SyncMultiFrameListener(libfreenect2::Frame::Color|libfreenect2::Frame::Depth|libfreenect2::Frame::Ir);
+		Freenect2_globals::dev->setColorFrameListener(Freenect2_globals::listener);
+		Freenect2_globals::dev->setIrAndDepthFrameListener(Freenect2_globals::listener);
+		if (!Freenect2_globals::dev->startStreams(true, true))
 		{
-			printf("cvCreateImage() failed.\n");
-			_ReleaseKinect2(&pKinect);
+			printf("startStreams() failed.\n");
+			Freenect2_globals::dev->close();
+			//delete Freenect2_globals::pipeline; // Cause problem, might be destroyed automatically by freenect2...?
+			delete Freenect2_globals::freenect2;
+			Freenect2_globals::refcount--;
+			__ReleaseKinect2SDK(&pKinect);
 			return NULL;
 		}
-		*pKinect->infraredimg = *pKinect->pinfraredimgmat;
-#endif // ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
-		pKinect->type = KINECT_TYPE_INFRARED;
 	}
+	pKinect->pcolorimgmat = new cv::Mat(cv::Size(KINECT_COLOR_IMAGE_WIDTH, KINECT_COLOR_IMAGE_HEIGHT), CV_8UC3, 0.0);
+	if ((!pKinect->pcolorimgmat)||(pKinect->pcolorimgmat->empty()))
+	{
+		printf("cv::Mat::zeros() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+	pKinect->pdepthimgmat = new cv::Mat(cv::Size(KINECT_INFRARED_IMAGE_WIDTH, KINECT_INFRARED_IMAGE_HEIGHT), CV_8UC3, 0.0);
+	if ((!pKinect->pdepthimgmat)||(pKinect->pdepthimgmat->empty()))
+	{
+		printf("cv::Mat::zeros() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+	pKinect->pinfraredimgmat = new cv::Mat(cv::Size(KINECT_INFRARED_IMAGE_WIDTH, KINECT_INFRARED_IMAGE_HEIGHT), CV_8UC3, 0.0);
+	if ((!pKinect->pinfraredimgmat)||(pKinect->pinfraredimgmat->empty()))
+	{
+		printf("cv::Mat::zeros() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+#if ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
+	pKinect->colorimg = cvCreateImage(cvSize(KINECT_COLOR_IMAGE_WIDTH, KINECT_COLOR_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
+	if (!pKinect->colorimg)
+	{
+		printf("cvCreateImage() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+	*pKinect->colorimg = *pKinect->pcolorimgmat;
+	pKinect->depthimg = cvCreateImage(cvSize(KINECT_INFRARED_IMAGE_WIDTH, KINECT_INFRARED_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
+	if (!pKinect->depthimg)
+	{
+		printf("cvCreateImage() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+	*pKinect->depthimg = *pKinect->pdepthimgmat;
+	pKinect->infraredimg = cvCreateImage(cvSize(KINECT_INFRARED_IMAGE_WIDTH, KINECT_INFRARED_IMAGE_HEIGHT), IPL_DEPTH_8U, 3);
+	if (!pKinect->infraredimg)
+	{
+		printf("cvCreateImage() failed.\n");
+		_ReleaseKinect2(&pKinect);
+		return NULL;
+	}
+	*pKinect->infraredimg = *pKinect->pinfraredimgmat;
+#endif // ((CV_MAJOR_VERSION < 4) || (defined(CV__ENABLE_C_API_CTORS)))
+	if (strncmp(filename, "Kinect2Color", strlen("Kinect2Color")) == 0) pKinect->type = KINECT_TYPE_COLOR;
+	else if (strncmp(filename, "Kinect2Depth", strlen("Kinect2Depth")) == 0) pKinect->type = KINECT_TYPE_DEPTH;
+	else if (strncmp(filename, "Kinect2Infrared", strlen("Kinect2Infrared")) == 0) pKinect->type = KINECT_TYPE_INFRARED;
 	else
 	{
 		printf("filename must be Kinect2Color, Kinect2Depth or Kinect2Infrared.\n");
-		pKinect->dev->close();
-		//delete pKinect->pipeline; // Cause problem, might be destroyed automatically by freenect2...?
-		delete pKinect->freenect2;
-		__ReleaseKinect2SDK(&pKinect);
+		_ReleaseKinect2(&pKinect);
 		return NULL;
 	}
 	return pKinect;
@@ -952,7 +942,7 @@ inline void _ProcessIncomingColorDataKinect2SDK(KINECT* pKinect)
 {
 	libfreenect2::FrameMap frames;
 
-	if (!pKinect->listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
+	if (!Freenect2_globals::listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
 	{
 		std::cout << "timeout!" << std::endl;
 		return;
@@ -962,14 +952,14 @@ inline void _ProcessIncomingColorDataKinect2SDK(KINECT* pKinect)
 	cv::cvtColor(img1, *pKinect->pcolorimgmat, CV_BGRA2BGR);
 	//IplImage im = img1;
 	//cvCvtColor(&im, pKinect->colorimg, CV_BGRA2BGR);
-	pKinect->listener->release(frames);
+	Freenect2_globals::listener->release(frames);
 }
 
 inline void _ProcessIncomingDepthDataKinect2SDK(KINECT* pKinect)
 {
 	libfreenect2::FrameMap frames;
 
-	if (!pKinect->listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
+	if (!Freenect2_globals::listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
 	{
 		std::cout << "timeout!" << std::endl;
 		return;
@@ -996,14 +986,14 @@ inline void _ProcessIncomingDepthDataKinect2SDK(KINECT* pKinect)
 	cv::cvtColor(img0, *pKinect->pdepthimgmat, CV_GRAY2BGR);
 	//IplImage im = img0;
 	//cvCvtColor(&im, pKinect->depthimg, CV_GRAY2BGR);
-	pKinect->listener->release(frames);
+	Freenect2_globals::listener->release(frames);
 }
 
 inline void _ProcessIncomingInfraredDataKinect2SDK(KINECT* pKinect)
 {
 	libfreenect2::FrameMap frames;
 
-	if (!pKinect->listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
+	if (!Freenect2_globals::listener->waitForNewFrame(frames, (int)(TIMEOUT_MESSAGE_KINECT*1000)))
 	{
 		std::cout << "timeout!" << std::endl;
 		return;
@@ -1021,9 +1011,9 @@ inline void _ProcessIncomingInfraredDataKinect2SDK(KINECT* pKinect)
 	cv::cvtColor(img0, *pKinect->pinfraredimgmat, CV_GRAY2BGR);
 	//IplImage im = img0;
 	//cvCvtColor(&im, pKinect->infraredimg, CV_GRAY2BGR);
-	pKinect->listener->release(frames);
+	Freenect2_globals::listener->release(frames);
 }
-#endif // USE_LIBFREENECT2
+#endif // !USE_LIBFREENECT2
 
 namespace cv
 {
