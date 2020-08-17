@@ -1175,6 +1175,7 @@ namespace cv
 #endif // (CV_MAJOR_VERSION >= 4)
 	};
 
+#undef VideoCapture
 #define VideoCapture VideoCaptureKinect2SDK
 }
 
@@ -1262,6 +1263,12 @@ inline void cvReleaseCaptureKinect2SDK(CvCapture** capture)
 	if ((pKinect->type == KINECT_TYPE_COLOR)||(pKinect->type == KINECT_TYPE_DEPTH)||(pKinect->type == KINECT_TYPE_INFRARED)) _ReleaseKinect2(&pKinect);
 	else cvReleaseCapture(capture);
 }
+
+#undef cvCreateFileCapture
+#undef cvSetCaptureProperty
+#undef cvGetCaptureProperty
+#undef cvQueryFrame
+#undef cvReleaseCapture
 
 #define cvCreateFileCapture cvCreateFileCaptureKinect2SDK
 #define cvSetCaptureProperty cvSetCapturePropertyKinect2SDK
