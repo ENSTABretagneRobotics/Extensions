@@ -34,7 +34,7 @@ inline int sendsimplehttpgetreq(SOCKET sock, char* url)
 
 	ptr = strchr(url+strlen("http://"), '/');
 	if (ptr == NULL) ptr = url+strlen(url);
-	count = ptr-url-strlen("http://");
+	count = (int)(ptr-url-strlen("http://"));
 	if (count <= 0)
 	{
 		PRINT_DEBUG_ERROR_OSNET(("sendhttpgetreq error (%s) : %s(sock=%d, url=%s)\n",
@@ -291,7 +291,7 @@ inline int gethtmltagdata(char* str, char* tag, char** pTagParams, char** pTagDa
 		return EXIT_INVALID_DATA;
 	}
 
-	count = ptr2-ptr;
+	count = (int)(ptr2-ptr);
 	if (count < 0)
 	{
 		free(tagend);

@@ -153,7 +153,7 @@ inline int CopyOverlay(IplImage* overlayimg, IplImage* destimg)
 #ifdef __cplusplus
 inline int CopyOverlayMat(cv::Mat& overlayimg, cv::Mat& destimg)
 {
-	int i = overlayimg.total()-3;
+	int i = (int)overlayimg.total()-3;
 
 	while (i >= 0)
 	{
